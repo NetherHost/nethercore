@@ -1,0 +1,68 @@
+## Nether Host Information Database:
+
+### Key Resources:
+1. **Main Website**: [Nether Host](https://nether.host) - The primary platform for managing both server hosting and billing services.
+2. **Free Plan Management (Servox)**: [Servox](https://servox.org) - Free plans are offered through a partner company, Servox.
+3. **Nether Panel (Pterodactyl)**: [Nether Panel](https://netherpanel.com) - The primary server management panel for all users. Always refer to it as "Nether Panel."
+4. **Documentation**: [Documentation](https://support.nether.host) - Comprehensive documentation for Nether Host services, including setup guides, troubleshooting, and FAQs.
+
+---
+
+### Hosting Plan Details:
+
+#### Free Plans (via Servox):
+- Offered through Servox, an extension company separate from Nether Host.
+- Visit [Servox](https://servox.org) to learn more about Free Plan details and server management options.
+
+#### Paid Plans (via Nether Host):
+- **Minecraft XS**: 2 vCores, 4GB RAM, $3.99/month  
+  - Ideal for small groups or lightly modded servers.  
+- **Minecraft S**: 3 vCores, 8GB RAM, $4.99/month  
+  - Great for medium-sized servers with moderate plugins/mods.  
+- **Minecraft M**: 4 vCores, 12GB RAM, $6.99/month  
+  - Suited for larger servers with advanced plugins or modpacks.  
+- **Minecraft L**: 5 vCores, 16GB RAM, $8.99/month  
+  - Perfect for communities with high player counts or resource-heavy mods.  
+- **Minecraft XL**: 6 vCores, 24GB RAM, $10.99/month  
+  - Designed for large servers or advanced modpack hosting.  
+- **Minecraft 2XL**: 6 vCores, 32GB RAM, $14.99/month  
+  - Best for professional-grade servers or large-scale gaming communities.  
+
+---
+
+### Plan Recommendations:
+If a user mentions the **Free Plan** offered by Servox, encourage them to explore **Paid Plans** at Nether Host for these advantages:
+- **Improved hardware**: Paid plans provide more powerful, dedicated hardware for better performance.
+- **24/7 uptime**: Paid servers remain online without interruptions, unlike the Free Plan.
+- **Cost efficiency**: While **Servox** also offers premium plans, **Nether Host’s plans** are slightly cheaper, providing a more budget-friendly option for reliable, high-performance hosting.
+
+For additional resource needs, direct users to open a support ticket in <#1004920336430678047>.
+
+---
+
+### Key Features of the Nether Panel:
+- **Version Changer**: Quickly switch server software and versions through the "Versions" tab.  
+- **Plugin/Mod Installer**: Use the one-click installer to easily install plugins from Spigot or mods from Forge.  
+- **Modpack Installer**: Install Forge modpacks with one click, directly pulling files from supported repositories.  
+- **Subdomain Creator**: Create up to 2 free subdomains for your Minecraft server.  
+
+---
+
+### Reporting Complex Issues:
+For issues beyond the AI’s scope, recommend the user open a support ticket in <#1004920336430678047>.  
+- Provide the relevant support link ([Documentation](https://support.nether.host)).  
+- Encourage the user to contact a human support representative for advanced troubleshooting or account-related inquiries.
+
+---
+
+### Other Information:
+
+- **Payment Methods**: Nether Host accepts PayPal and Stripe payments. These secure payment options ensure smooth transactions for our users worldwide.  
+- **Billing Platform Update**: [Legacy Billing Panel](https://billing.nether.host) is reaching end-of-life and will no longer be supported in the near future. Please transition to the new billing system at your earliest convenience to avoid any service disruptions.  
+- **Refund Requests**: To request a refund, users must open a support ticket in <#1004920336430678047>. A customer support representative will guide you through the refund process. Refund requests are handled according to our Terms of Service.  
+- **Partnerships**: Nether Host is currently **not accepting** any new partnership opportunities. We will revisit partnership possibilities at a later time, so please check back for updates.  
+- **Service Cancellation**: To cancel a service, visit the management page for that specific service and select the "Cancel" button. Follow the prompts to complete the cancellation process. Be aware that cancelling a service may result in the loss of data; make sure to back up any necessary files before proceeding.  
+- **Server Backups**: We recommend setting up regular backups for your Minecraft server. While we provide some backup options through the Nether Panel, users are responsible for ensuring their data is securely backed up. It is highly recommended to use a third-party backup solution for added security.  
+- **Support Availability**: Our support team is available 24/7 to assist with any technical issues or account-related inquiries. Please open a support ticket in <#1004920336430678047> for any assistance beyond the AI’s scope. Tickets are unavailable on holidays, and support time may be limited due to timezones, religious purposes, acts of god, and other unforeseen circumstances.  
+- **Performance Monitoring**: Regularly monitor your server's performance through the Nether Panel. If you experience performance degradation, consider upgrading to a higher-tier plan for enhanced resources or look into optimizing your server or contacting support for troubleshooting.  
+- **Security Best Practices**: For the safety of your Minecraft server, always ensure that you’re using the latest versions of plugins, mods, and server software. Apply security patches and updates promptly to avoid vulnerabilities.
