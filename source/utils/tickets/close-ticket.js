@@ -53,6 +53,14 @@ async function closeTicket(interaction, client, channel) {
       });
     }
 
+    // check if user is staff member
+    if (interaction.user.id === ticketData.user.id) {
+      return await interaction.reply({
+        content: "Only staff members may close tickets.",
+        ephemeral: true,
+      });
+    }
+
     // update ticket status and user permissions
     await interaction.channel.permissionOverwrites.edit(ticketData.user.id, {
       SendMessages: false,

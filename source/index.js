@@ -10,7 +10,6 @@ const {
   WebhookClient,
   EmbedBuilder,
 } = require("discord.js");
-const { createBackup } = require("./backup.js");
 const color = require("chalk");
 const fs = require("fs");
 const path = require("path");
@@ -25,6 +24,7 @@ const config = JSON5.parse(
 );
 const handleError = require("./utils/handle-error.js");
 const start = Date.now();
+
 const { token } = process.env;
 const client = new Client({
   intents: [
@@ -42,7 +42,6 @@ const client = new Client({
   },
 });
 
-// database connection
 (async () => {
   console.log(
     color.green("[INFO] ") + color.white("Connecting to Database...")
@@ -207,18 +206,6 @@ client.once("ready", () => {
     .catch((error) => {
       handleError(error);
     });
-
-  createBackup();
-
-  setInterval(
-    () => {
-      console.log(
-        color.green("[INFO] ") + color.white("Running backup process...")
-      );
-      createBackup();
-    },
-    6 * 60 * 60 * 1000
-  );
 });
 
 client.on("error", (error) => {
@@ -248,7 +235,7 @@ function sendErrorWebhook(error) {
   webhookClient.send({
     embeds: [
       new EmbedBuilder()
-        .setTitle("🚨 Error!")
+        .setTitle("🚨 Error")
         .setDescription(
           `An error occurred in the bot console!\n\n\`\`\`\n${error}\n\`\`\``
         )

@@ -69,7 +69,7 @@
   ticketClosedFields: {
     field1: {
       name: "Delete",
-      value: "Press the icon with the waste bin icon to delete this ticket.",
+      value: "Staff may press the icon with the waste bin icon to delete this ticket.",
     },
     field2: {
       name: "Transcript",

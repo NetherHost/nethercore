@@ -163,7 +163,7 @@ module.exports = {
         }
 
         const giveawayMessage = await interaction.channel.send({
-          content: `${pingRole ? `${pingRole}` : "No ping role"}`,
+          content: `${pingRole ? `<@&${pingRole.id}>` : ""}`,
           embeds: [
             new EmbedBuilder()
               .setTitle("New Giveaway 🎉")
@@ -204,7 +204,7 @@ module.exports = {
             ),
           ],
           allowedMentions: {
-            users: [pingRole.id],
+            roles: pingRole ? [pingRole.id] : [],
           },
         });
 
@@ -412,6 +412,9 @@ module.exports = {
           content: `New winner(s) for Giveaway ${id}: ${newWinners
             .map((winner) => `<@${winner}>`)
             .join(", ")}`,
+          allowedMentions: {
+            users: newWinners,
+          },
         });
       }
     } catch (error) {
