@@ -1,0 +1,35 @@
+{
+  "name": "nethercore",
+  "version": "v1.0.0-Alpha.1",
+  "description": "A modern, optimized Discord bot for Nether Host.",
+  "scripts": {
+    "dev": "node --watch-path=./src src/index.js",
+    "start": "node src/index.js"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "javascript",
+    "discord.js",
+    "nethercore"
+  ],
+  "author": "maybeizen",
+  "license": "MIT",
+  "packageManager": "pnpm@10.8.1",
+  "dependencies": {
+    "axios": "^1.8.4",
+    "chalk": "4.1.2",
+    "discord.js": "^14.18.0",
+    "dotenv": "^16.5.0",
+    "module-alias": "^2.2.3",
+    "mongoose": "^8.13.2"
+  },
+  "_moduleAliases": {
+    "@config": "./config",
+    "@": "./src",
+    "@lib": "./src/lib",
+    "@utils": "./src/utils",
+    "@events": "./src/events",
+    "@commands": "./src/commands"
+  }
+}
