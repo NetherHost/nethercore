@@ -8,6 +8,8 @@ const {
 } = require("discord.js");
 const os = require("os");
 const { version } = require("../../../package.json");
+const { execSync } = require("child_process");
+const commit = execSync("git rev-parse --short HEAD").toString().trim();
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -39,13 +41,9 @@ module.exports = {
       const cpuLoad = os.loadavg()[0]; // load avg over 60s
 
       return new EmbedBuilder()
-        .setTitle("🩺 NetherCore Bot Health")
+        .setTitle("NetherCore Bot Health")
         .setColor("#43B581")
         .setFields(
-          {
-            name: "Version",
-            value: `${version}`,
-          },
           {
             name: "API Ping",
             value: `\`\`\`${apiPing}ms\`\`\``,
@@ -73,9 +71,8 @@ module.exports = {
           }
         )
         .setFooter({
-          text: `Checked at`,
-        })
-        .setTimestamp();
+          text: `NetherCore ${version} (${commit})`,
+        });
     };
 
     const recheckButton = new ButtonBuilder()
