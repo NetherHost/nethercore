@@ -24,6 +24,8 @@ backups/
 transcripts/
 source/data/memory.json
 NetherCore.zip
+source/config/general.json5
+source/config/staff.json5
 
 # go
 **/*.exe
