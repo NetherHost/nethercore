@@ -67,6 +67,5 @@ async function translate(text, language) {
 
 module.exports = {
   generateAiResponse,
-  ask,
   translate,
 };
