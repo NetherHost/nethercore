@@ -49,7 +49,7 @@ module.exports = {
         userData = await registerUser(interaction.user, client);
       }
 
-      const language = userData.language.value;
+      const language = "en-US";
       const messages = loadMessages(language);
 
       if (command === "add") {

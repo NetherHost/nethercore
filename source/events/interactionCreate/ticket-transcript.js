@@ -19,7 +19,7 @@ module.exports = async (client, interaction) => {
     let user;
     user = await User.findOne({ "user.id": interaction.user.id });
 
-    const language = user.language.value;
+    const language = "en-US";
     const messages = loadMessages(language);
 
     await interaction.reply({

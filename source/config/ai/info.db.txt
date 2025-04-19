@@ -2,17 +2,15 @@
 
 ### Key Resources:
 1. **Main Website**: [Nether Host](https://nether.host) - The primary platform for managing both server hosting and billing services.
-2. **Free Plan Management (Servox)**: [Servox](https://servox.org) - Free plans are offered through a partner company, Servox.
-3. **Nether Panel (Pterodactyl)**: [Nether Panel](https://netherpanel.com) - The primary server management panel for all users. Always refer to it as "Nether Panel."
-4. **Documentation**: [Documentation](https://support.nether.host) - Comprehensive documentation for Nether Host services, including setup guides, troubleshooting, and FAQs.
+2. **Nether Panel (Pterodactyl)**: [Nether Panel](https://netherpanel.com) - The primary server management panel for all users. Always refer to it as "Nether Panel."
+3. **Documentation**: [Documentation](https://support.nether.host) - Comprehensive documentation for Nether Host services, including setup guides, troubleshooting, and FAQs.
 
 ---
 
 ### Hosting Plan Details:
 
-#### Free Plans (via Servox):
-- Offered through Servox, an extension company separate from Nether Host.
-- Visit [Servox](https://servox.org) to learn more about Free Plan details and server management options.
+#### Free Plans (Not Offered):
+- Free plans are not offered at Nether Host.
 
 #### Paid Plans (via Nether Host):
 - **Minecraft XS**: 2 vCores, 4GB RAM, $3.99/month  
@@ -31,10 +29,8 @@
 ---
 
 ### Plan Recommendations:
-If a user mentions the **Free Plan** offered by Servox, encourage them to explore **Paid Plans** at Nether Host for these advantages:
 - **Improved hardware**: Paid plans provide more powerful, dedicated hardware for better performance.
-- **24/7 uptime**: Paid servers remain online without interruptions, unlike the Free Plan.
-- **Cost efficiency**: While **Servox** also offers premium plans, **Nether Host’s plans** are slightly cheaper, providing a more budget-friendly option for reliable, high-performance hosting.
+- **24/7 uptime**: Paid servers remain online without interruptions.
 
 For additional resource needs, direct users to open a support ticket in <#1004920336430678047>.
 

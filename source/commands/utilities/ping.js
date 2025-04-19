@@ -27,7 +27,7 @@ module.exports = {
         user = await registerUser(interaction.user, client);
       }
 
-      const language = user.language.value;
+      const language = "en-US";
       const messages = loadMessages(language);
       const ping = Math.round(client.ws.ping);
 

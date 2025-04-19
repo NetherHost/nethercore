@@ -24,7 +24,7 @@ module.exports = async (client, message) => {
 
     await message.channel.sendTyping();
 
-    const language = user.language.value;
+    const language = "en-US";
 
     const contextMessages = getConversationContext(message.author, 5);
     const context = contextMessages

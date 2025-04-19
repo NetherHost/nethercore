@@ -21,11 +21,7 @@ const config = JSON5.parse(
   fs.readFileSync("source/config/general.json5", "utf-8")
 );
 const { registerUser } = require("../register-user.js");
-const {
-  loadMessages,
-  shortLanguageCodes,
-  languageChoices,
-} = require("../language.js");
+const { loadMessages, languageChoices } = require("../language.js");
 const { getTicketAccessStatus } = require("./extra-ticket-utils.js");
 
 const ticketCooldowns = new Map();
@@ -48,7 +44,6 @@ async function openTicket(interaction, client, user) {
 
     const language = "en-US";
     const messages = await loadMessages(language);
-    const shortLanguageCode = shortLanguageCodes[language];
 
     // first check for existing ticket
     const existingTicket = userData.tickets.find(

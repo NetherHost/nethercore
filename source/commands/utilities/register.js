@@ -31,7 +31,7 @@ module.exports = {
 
       if (!userData) return;
 
-      const language = userData.language.value;
+      const language = "en-US";
       const messages = loadMessages(language);
 
       if (!isStaff(interaction.user.id))
