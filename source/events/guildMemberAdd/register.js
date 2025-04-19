@@ -1,6 +1,6 @@
 // Copyright 2025 Nether Host
 
-const registerUser = require("../../utils/register-user.js");
+const { registerUser } = require("../../utils/register-user.js");
 const handleError = require("../../utils/handle-error.js");
 const User = require("../../models/User.js");
 
