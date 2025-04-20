@@ -39,6 +39,14 @@ async function deleteTicket(interaction, channel) {
       });
     }
 
+    // check if user is staff member
+    if (interaction.user.id === ticketData.user.id) {
+      return await interaction.reply({
+        content: "Only staff members may close tickets.",
+        ephemeral: true,
+      });
+    }
+
     // check if ticket is deleted
     // likey wont, but may happen if the channel fails to get deleted.
     // just in case
