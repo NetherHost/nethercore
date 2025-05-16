@@ -1,42 +1,6 @@
-# Node
-node_modules/
+.commandkit
+.vscode
+node_modules
 .env
 .env.*
-dist/
-build/
-coverage/
-
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-*.log
-
-# OS
-.DS_Store
-Thumbs.db
-*.swp
-*.swo
-*.sublime-workspace
-*.vscode/
-.idea/
-*.code-workspace
-
-# Typescript
-*.tsbuildinfo
-*.d.ts
-.eslintcache
-
-# Tests
-coverage/
-test-results/
-
-# Misc
-*.local
-*.bak
-*.old
-*.orig
-*.dll
-*.exe
-*.so
+dist

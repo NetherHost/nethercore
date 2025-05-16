@@ -1,35 +1,35 @@
 {
   "name": "nethercore",
-  "version": "v1.0.0-Alpha.1",
-  "description": "A modern, optimized Discord bot for Nether Host.",
+  "version": "1.0.0",
+  "description": "A Discord bot built with TypeScript",
+  "type": "module",
+  "main": "dist/index.js",
   "scripts": {
-    "dev": "node --watch-path=./src src/index.js",
-    "start": "node src/index.js"
+    "build": "commandkit build",
+    "start": "commandkit start",
+    "dev": "commandkit dev",
+    "watch": "commandkit build --watch",
+    "types": "tsc --noEmit"
   },
   "keywords": [
     "discord",
     "bot",
-    "javascript",
-    "discord.js",
-    "nethercore"
+    "typescript"
   ],
-  "author": "maybeizen",
-  "license": "MIT",
-  "packageManager": "pnpm@10.8.1",
-  "dependencies": {
-    "axios": "^1.8.4",
-    "chalk": "4.1.2",
-    "discord.js": "^14.18.0",
-    "dotenv": "^16.5.0",
-    "module-alias": "^2.2.3",
-    "mongoose": "^8.13.2"
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.11.0",
+  "devDependencies": {
+    "@types/node": "^22.15.18",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
   },
-  "_moduleAliases": {
-    "@config": "./config",
-    "@": "./src",
-    "@lib": "./src/lib",
-    "@utils": "./src/utils",
-    "@events": "./src/events",
-    "@commands": "./src/commands"
+  "dependencies": {
+    "axios": "^1.9.0",
+    "chalk": "5.4.1",
+    "commandkit": "^0.1.10",
+    "discord.js": "^14.19.3",
+    "dotenv": "^16.5.0",
+    "mongoose": "^8.15.0"
   }
 }
