@@ -61,7 +61,10 @@ export async function run({ interaction }: SlashCommandProps) {
       });
     }
 
-    return interaction.reply({ content: message });
+    return interaction.reply({
+      flags: [MessageFlags.IsComponentsV2],
+      components: [new TextDisplayBuilder().setContent(message)],
+    });
   } catch (error) {
     console.error("Error in /say command:", error);
     return interaction.reply({
