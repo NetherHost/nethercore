@@ -17,5 +17,5 @@ export default async function (
 
   const ticket = new Ticket();
 
-  await ticket.close({ interaction, client });
+  await ticket.close().close({ interaction, client });
 }

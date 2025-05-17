@@ -1,3 +1,13 @@
+export interface BotConfig {
+  staff: {
+    staffRoleIds: string[];
+  };
+  tickets: {
+    parentCategoryId: string;
+    closedCategoryId: string;
+  };
+}
+
 export interface Ticket {
   userId: string;
   ticketId: string;

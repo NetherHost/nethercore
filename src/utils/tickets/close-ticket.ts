@@ -23,6 +23,7 @@ import {
   type Ticket as TicketProps,
   type User as UserProps,
 } from "../../../types/global";
+import config from "../../config";
 
 interface CloseTicketProps {
   interaction: ButtonInteraction;
@@ -48,7 +49,7 @@ class CloseTicket {
 
       const ticketData = await Tickets.findOne({
         userId: interaction.user.id,
-        status: open,
+        status: "open",
       });
 
       if (!ticketData)
@@ -94,6 +95,10 @@ class CloseTicket {
           .setCustomId("reopen-ticket-button")
           .setStyle(ButtonStyle.Secondary)
       );
+
+      await channel.edit({
+        parent: config?.tickets?.closedCategoryId,
+      });
 
       await interaction.reply({
         embeds: [

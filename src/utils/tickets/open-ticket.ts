@@ -22,6 +22,7 @@ import {
   type Ticket as TicketProps,
   type User as UserProps,
 } from "../../../types/global";
+import config from "../../config";
 
 interface OpenTicketProps {
   interaction: ButtonInteraction;
@@ -172,8 +173,8 @@ class OpenTicket {
             id: guild.roles.everyone.id,
             deny: [PermissionsBitField.Flags.ViewChannel],
           },
-          ...["1288652951992139919", "1288652975413133407"].map((roleId) => ({
-            id: roleId,
+          ...config.staff.staffRoleIds.map((id: string) => ({
+            id,
             allow: defaultAllowPerms,
           })),
         ];
@@ -181,7 +182,7 @@ class OpenTicket {
         const ticketChannel = await guild.channels.create({
           name: `ticket-${interaction.user.username}`,
           type: ChannelType.GuildText,
-          parent: "1288653678806569032",
+          parent: config?.tickets?.parentCategoryId,
           permissionOverwrites: permissions,
         });
 

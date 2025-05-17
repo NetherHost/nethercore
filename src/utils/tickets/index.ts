@@ -2,14 +2,14 @@ import OpenTicket from "./open-ticket";
 import CloseTicket from "./close-ticket";
 
 class Ticket {
-  public open: OpenTicket["open"];
-  public close: CloseTicket["close"];
+  constructor() {}
 
-  constructor() {
-    const openTicket = new OpenTicket();
-    const closeTicket = new CloseTicket();
-    this.open = openTicket.open.bind(openTicket);
-    this.close = openTicket.open.bind(closeTicket);
+  public open() {
+    return new OpenTicket();
+  }
+
+  public close() {
+    return new CloseTicket();
   }
 }
 

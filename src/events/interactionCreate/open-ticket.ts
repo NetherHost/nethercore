@@ -17,5 +17,5 @@ export default async function (
 
   const ticket = new Ticket();
 
-  await ticket.open({ interaction, client });
+  await ticket.open().open({ interaction, client });
 }
