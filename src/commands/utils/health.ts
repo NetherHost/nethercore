@@ -84,6 +84,7 @@ export async function run({ interaction, client }: SlashCommandProps) {
       )
       .setFooter({
         text: `NetherCore ${version} (${commit})`,
+        iconURL: client.user.avatarURL({ extension: "webp" }) ?? undefined,
       });
   };
 

@@ -139,11 +139,8 @@ class Ticket {
         time: 20_000,
       });
 
-      let selectedDepartment: any = null;
-
       collector.on("collect", async (i) => {
-        if (i.customId === "select-department")
-          selectedDepartment = i.values[0];
+        const selectedDepartment = i.values[0];
 
         if (existingTicket)
           return interaction.reply({
@@ -182,7 +179,7 @@ class Ticket {
 
         const newTicket = new Tickets({
           userId: interaction.user.id,
-          id: ticketChannel.id,
+          ticketId: ticketChannel.id,
           name: ticketChannel.name,
           status: "open",
           department: selectedDepartment,
@@ -204,7 +201,7 @@ class Ticket {
         await ticketChannel.send({
           embeds: [
             new EmbedBuilder()
-              .setTitle(`Support Ticket ${ticketSettings.totalTickets + 1}`)
+              .setTitle(`Support Ticket ${ticketSettings.totalTickets}`)
               .setDescription(
                 `Thank you for opening a ticket, ${interaction.user}. Staff will be with you shortly.\n\nIn the meantime, please describe your issue in detail. Provide logs, screenshots, or other information you believe will assist us.`
               )
@@ -212,7 +209,7 @@ class Ticket {
             new EmbedBuilder()
               .setTitle("Ticket Information")
               .setDescription(
-                "Here is some information about the ticket and it's creator:"
+                "Here is some information about the ticket and its creator:"
               )
               .addFields(
                 {
