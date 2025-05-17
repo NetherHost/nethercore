@@ -8,4 +8,5 @@ export default defineConfig({
   sourcemap: true,
   antiCrash: true,
   envExtra: true,
+  minify: true,
 });
