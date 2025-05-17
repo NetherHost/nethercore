@@ -43,7 +43,7 @@ export async function run({ interaction, client }: SlashCommandProps) {
 
   if (!channel || !channel.isTextBased()) {
     return interaction.reply({
-      content: "❌ The selected channel is not a valid text-based channel.",
+      content: "The selected channel is not a valid text-based channel.",
       ephemeral: true,
     });
   }
