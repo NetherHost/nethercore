@@ -7,13 +7,13 @@ import {
 } from "discord.js";
 import type { CommandData, SlashCommandProps } from "commandkit";
 import os from "node:os";
-import { version } from "../../package.json";
+import { version } from "../../../package.json";
 const { execSync } = require("child_process");
 const commit = execSync("git rev-parse --short HEAD").toString().trim();
 
 export const data: CommandData = {
   name: "health",
-  description: "Replies with bot status.",
+  description: "Replies with bot status and information.",
 };
 
 export async function run({ interaction, client }: SlashCommandProps) {
@@ -36,9 +36,6 @@ export async function run({ interaction, client }: SlashCommandProps) {
     const apiPing = Math.round(client.ws.ping);
 
     const memoryUsage = process.memoryUsage();
-    const totalMem = os.totalmem();
-    const freeMem = os.freemem();
-
     const cpuLoad = os.loadavg()[0]; // load avg over 60s
 
     return new EmbedBuilder()
@@ -73,6 +70,7 @@ export async function run({ interaction, client }: SlashCommandProps) {
       )
       .setFooter({
         text: `NetherCore ${version} (${commit})`,
+        iconURL: client.user.avatarURL({ extension: "webp" }) ?? undefined,
       });
   };
 
