@@ -1,20 +1,33 @@
 import {
-  EmbedBuilder,
   ButtonBuilder,
-  ActionRowBuilder,
-  ComponentType,
+  ButtonInteraction,
   ButtonStyle,
+  ComponentType,
+  EmbedBuilder,
+  ActionRowBuilder,
 } from "discord.js";
 import type { CommandData, SlashCommandProps } from "commandkit";
 import os from "node:os";
 import { version } from "../../../package.json";
-const { execSync } = require("child_process");
+import { execSync } from "child_process";
 const commit = execSync("git rev-parse --short HEAD").toString().trim();
 
 export const data: CommandData = {
   name: "health",
   description: "Replies with bot status and information.",
 };
+
+function formatUptime(ms: number) {
+  const seconds = Math.floor(ms / 1000) % 60;
+  const minutes = Math.floor(ms / (1000 * 60)) % 60;
+  const hours = Math.floor(ms / (1000 * 60 * 60)) % 24;
+  const days = Math.floor(ms / (1000 * 60 * 60 * 24));
+  return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+}
+
+function formatBytes(bytes: number) {
+  return `${(bytes / 1024 / 1024).toFixed(2)} MB`;
+}
 
 export async function run({ interaction, client }: SlashCommandProps) {
   await interaction.deferReply();
@@ -36,6 +49,7 @@ export async function run({ interaction, client }: SlashCommandProps) {
     const apiPing = Math.round(client.ws.ping);
 
     const memoryUsage = process.memoryUsage();
+
     const cpuLoad = os.loadavg()[0]; // load avg over 60s
 
     return new EmbedBuilder()
@@ -70,7 +84,6 @@ export async function run({ interaction, client }: SlashCommandProps) {
       )
       .setFooter({
         text: `NetherCore ${version} (${commit})`,
-        iconURL: client.user.avatarURL({ extension: "webp" }) ?? undefined,
       });
   };
 
@@ -92,7 +105,7 @@ export async function run({ interaction, client }: SlashCommandProps) {
     time: 60_000,
   });
 
-  collector.on("collect", async (buttonInteraction) => {
+  collector.on("collect", async (buttonInteraction: ButtonInteraction) => {
     if (buttonInteraction.user.id !== interaction.user.id) {
       return buttonInteraction.reply({
         content:

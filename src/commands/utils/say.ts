@@ -7,7 +7,6 @@ import {
   ThreadChannel,
   DMChannel,
   MessageFlags,
-  TextDisplayBuilder,
 } from "discord.js";
 
 export const data: CommandData = {
@@ -38,12 +37,8 @@ export async function run({ interaction }: SlashCommandProps) {
   const channel = interaction.channel;
   if (!channel?.isTextBased() || !("send" in channel)) {
     return interaction.reply({
-      flags: [MessageFlags.Ephemeral, MessageFlags.IsComponentsV2],
-      components: [
-        new TextDisplayBuilder().setContent(
-          "I cannot send messages in this channel."
-        ),
-      ],
+      content: "I cannot send messages in this channel.",
+      flags: [MessageFlags.Ephemeral],
     });
   }
 
@@ -54,26 +49,20 @@ export async function run({ interaction }: SlashCommandProps) {
       ).send(message);
 
       return interaction.reply({
-        flags: [MessageFlags.Ephemeral, MessageFlags.IsComponentsV2],
-        components: [
-          new TextDisplayBuilder().setContent("Message sent anonymously."),
-        ],
+        content: "Message sent anonymously.",
+        flags: [MessageFlags.Ephemeral],
       });
     }
 
     return interaction.reply({
-      flags: [MessageFlags.IsComponentsV2],
-      components: [new TextDisplayBuilder().setContent(message)],
+      content: `${message}`,
+      flags: [],
     });
   } catch (error) {
-    console.error("Error in /say command:", error);
+    console.error(`Error in /say command: ${error}`);
     return interaction.reply({
-      flags: [MessageFlags.Ephemeral, MessageFlags.IsComponentsV2],
-      components: [
-        new TextDisplayBuilder().setContent(
-          "There was an error while executing this command."
-        ),
-      ],
+      content: "There was an error while executing this command.",
+      flags: [MessageFlags.Ephemeral],
     });
   }
 }
