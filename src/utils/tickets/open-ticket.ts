@@ -15,23 +15,26 @@ import {
   StringSelectMenuOptionBuilder,
   TextChannel,
 } from "discord.js";
-import Tickets from "../models/Tickets";
-import TicketSettings from "../models/TicketSettings";
-import User from "../models/User";
+import Tickets from "../../models/Tickets";
+import TicketSettings from "../../models/TicketSettings";
+import User from "../../models/User";
 import {
   type Ticket as TicketProps,
   type User as UserProps,
-} from "../../types/global";
+} from "../../../types/global";
 
 interface OpenTicketProps {
   interaction: ButtonInteraction;
   client: Client;
 }
 
-class Ticket {
+class OpenTicket {
   constructor() {}
 
-  public async open({ interaction, client }: OpenTicketProps) {
+  public async open({
+    interaction,
+    client,
+  }: OpenTicketProps): Promise<unknown> {
     try {
       const guild = interaction.guild as Guild;
       const member = interaction.member as GuildMember;
@@ -65,8 +68,10 @@ class Ticket {
           });
 
         default:
+          const newTicketSettings = new TicketSettings();
+          await newTicketSettings.save();
           return interaction.reply({
-            content: `500 Internal Server Error: \`TicketSettingsDocument not found or invalid.\``,
+            content: `500 Internal Server Error: \`TicketSettingsDocument not found or invalid.\`\n\nCreating...`,
             ephemeral: true,
           });
       }
@@ -130,6 +135,7 @@ class Ticket {
             )
             .setColor("Red"),
         ],
+        fetchReply: true,
         components: [new ActionRowBuilder().addComponents(menu).toJSON()],
         flags: [MessageFlags.Ephemeral],
       });
@@ -140,6 +146,8 @@ class Ticket {
       });
 
       collector.on("collect", async (i) => {
+        if (i.customId !== "select-department")
+          return console.log("Did not find interaction");
         const selectedDepartment = i.values[0];
 
         if (existingTicket)
@@ -268,3 +276,5 @@ class Ticket {
     }
   }
 }
+
+export default OpenTicket;

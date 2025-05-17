@@ -7,13 +7,13 @@ export interface Ticket {
   claim: {
     status: boolean;
     claimedBy?: string;
-    claimedAt?: Date;
+    claimedAt?: number;
   };
   timestamps: {
-    createdAt: Date;
-    attendedToAt?: Date;
-    closedAt?: Date;
-    deletedAt?: Date;
+    createdAt: number;
+    attendedToAt?: number;
+    closedAt?: number;
+    deletedAt?: number;
   };
 }
 
@@ -25,8 +25,8 @@ export interface User {
   };
   isStaff: boolean;
   timestamps: {
-    joinedAt?: Date;
-    leftAt?: Date;
-    createdAt?: Date;
+    joinedAt?: number;
+    leftAt?: number;
+    createdAt?: number;
   };
 }
