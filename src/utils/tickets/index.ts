@@ -1,5 +1,6 @@
 import OpenTicket from "./open-ticket";
 import CloseTicket from "./close-ticket";
+import DeleteTicket from "./delete-ticket";
 
 class Ticket {
   constructor() {}
@@ -10,6 +11,10 @@ class Ticket {
 
   public close() {
     return new CloseTicket();
+  }
+
+  public delete() {
+    return new DeleteTicket();
   }
 }
 
