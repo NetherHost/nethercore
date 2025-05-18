@@ -37,7 +37,8 @@ export async function run({ interaction }: SlashCommandProps) {
   const channel = interaction.channel;
   if (!channel?.isTextBased() || !("send" in channel)) {
     return interaction.reply({
-      content: "I cannot send messages in this channel.",
+      content:
+        "400 Bad Request: `The current channel does not accept messages.`",
       flags: [MessageFlags.Ephemeral],
     });
   }
@@ -61,7 +62,8 @@ export async function run({ interaction }: SlashCommandProps) {
   } catch (error) {
     console.error(`Error in /say command: ${error}`);
     return interaction.reply({
-      content: "There was an error while executing this command.",
+      content:
+        "500 Internal Server Error: `An unexpected error occurred while executing this command.`",
       flags: [MessageFlags.Ephemeral],
     });
   }

@@ -5,6 +5,7 @@ import {
   ComponentType,
   EmbedBuilder,
   ActionRowBuilder,
+  MessageFlags,
 } from "discord.js";
 import type { CommandData, SlashCommandProps } from "commandkit";
 import os from "node:os";
@@ -16,18 +17,6 @@ export const data: CommandData = {
   name: "health",
   description: "Replies with bot status and information.",
 };
-
-function formatUptime(ms: number) {
-  const seconds = Math.floor(ms / 1000) % 60;
-  const minutes = Math.floor(ms / (1000 * 60)) % 60;
-  const hours = Math.floor(ms / (1000 * 60 * 60)) % 24;
-  const days = Math.floor(ms / (1000 * 60 * 60 * 24));
-  return `${days}d ${hours}h ${minutes}m ${seconds}s`;
-}
-
-function formatBytes(bytes: number) {
-  return `${(bytes / 1024 / 1024).toFixed(2)} MB`;
-}
 
 export async function run({ interaction, client }: SlashCommandProps) {
   await interaction.deferReply();
@@ -107,13 +96,12 @@ export async function run({ interaction, client }: SlashCommandProps) {
   });
 
   collector.on("collect", async (buttonInteraction: ButtonInteraction) => {
-    if (buttonInteraction.user.id !== interaction.user.id) {
+    if (buttonInteraction.user.id !== interaction.user.id)
       return buttonInteraction.reply({
         content:
-          "Only the user who ran the command can recheck the bot's health.",
-        ephemeral: true,
+          "403 Forbidden: `Only the command author is permitted to use this.`",
+        flags: [MessageFlags.Ephemeral],
       });
-    }
 
     await buttonInteraction.deferUpdate();
     const updatedEmbed = await createEmbed();

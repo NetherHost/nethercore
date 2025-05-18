@@ -43,8 +43,9 @@ export async function run({ interaction, client }: SlashCommandProps) {
 
   if (!channel || !channel.isTextBased()) {
     return interaction.reply({
-      content: "The selected channel is not a valid text-based channel.",
-      ephemeral: true,
+      content:
+        "400 Bad Request: `The current channel does not accept messages.`",
+      flags: [MessageFlags.Ephemeral],
     });
   }
 
