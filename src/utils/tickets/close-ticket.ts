@@ -3,26 +3,14 @@ import {
   ButtonBuilder,
   ButtonInteraction,
   ButtonStyle,
-  ChannelType,
   Client,
-  ComponentType,
   EmbedBuilder,
-  Guild,
-  GuildMember,
   MessageFlags,
   NewsChannel,
-  PermissionsBitField,
-  StringSelectMenuBuilder,
-  StringSelectMenuOptionBuilder,
   TextChannel,
 } from "discord.js";
 import Tickets from "../../models/Tickets";
-import TicketSettings from "../../models/TicketSettings";
 import User from "../../models/User";
-import {
-  type Ticket as TicketProps,
-  type User as UserProps,
-} from "../../../types/global";
 import config from "../../config";
 
 interface CloseTicketProps {
@@ -49,17 +37,18 @@ class CloseTicket {
 
       const ticketData = await Tickets.findOne({
         userId: interaction.user.id,
-        status: "open",
+        ticketId: channel.id,
       });
 
       if (!ticketData)
         return interaction.reply({
           content: `404 Not Found: \`TicketsDocument not found in remote database.\``,
+          flags: [MessageFlags.Ephemeral],
         });
 
       if (["closed", "deleted"].includes(ticketData.status)) {
         return interaction.reply({
-          content: `409 Conflict: This ticket is already ${ticketData.status}.`,
+          content: `409 Conflict: \`This ticket is already ${ticketData.status}\`.`,
           flags: [MessageFlags.Ephemeral],
         });
       }
