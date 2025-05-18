@@ -62,7 +62,7 @@ class DeleteTicket {
       if (ticketData.status === "open" || ticketData.status === "deleted")
         return interaction.reply({
           content:
-            "409 Conflict: This ticket cannot be deleted right now.\n\n" +
+            "409 Conflict: `This ticket cannot be deleted right now.`\n\n" +
             "- If it's still **open**, it must be closed first.\n" +
             "- If it's already **deleted**, the channel may have failed to delete. Please contact a staff member.",
           flags: [MessageFlags.Ephemeral],
