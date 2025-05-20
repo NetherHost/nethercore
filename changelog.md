@@ -1,12 +1,10 @@
 # NetherCore Changelog
 
-This file tracks all updates to **NetherCore** beginning from [commit `b8d35dd`](https://github.com/NetherHost/nethercore/commit/b8d35ddc621569a1163cad2fcf56910acf931444). All future changes will be documented here.
+This file tracks all updates to **NetherCore**, beginning from [commit `b8d35dd`](https://github.com/NetherHost/nethercore/commit/b8d35ddc621569a1163cad2fcf56910acf931444). All future changes will be documented here.
 
 ## Versioning Scheme
 
-```
-v[BOT_VERSION]-[STAGE]+[BUILD_NUMBER]
-```
+v\[BOT_VERSION]-\[STAGE]+\[BUILD_NUMBER]
 
 - **BOT_VERSION**: Follows [Semantic Versioning](https://semver.org/) — `MAJOR.MINOR.PATCH`
 - **STAGE**: Indicates development phase — one of `Alpha`, `Beta`, or `Release`
@@ -14,6 +12,11 @@ v[BOT_VERSION]-[STAGE]+[BUILD_NUMBER]
 
 ---
 
-# v0.0.1-Alpha+1 (19.5.2025)
+## v0.0.1-Alpha+1 - _Improving Documentation_ - 2025-05-19
 
-- Create `changelog.md` to track bot updates.
+- Created `changelog.md` to track bot updates.
+
+## v0.0.1-Alpha+2 - _Improving Documentation_ - 2025-05-19
+
+- Added [LICENSE](./license) file.
+- Updated [README.md](./readme.md) with license information.
