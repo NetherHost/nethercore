@@ -20,3 +20,7 @@ v\[BOT_VERSION]-\[STAGE]+\[BUILD_NUMBER]
 
 - Added [LICENSE](./license) file.
 - Updated [README.md](./readme.md) with license information.
+
+## v0.0.1-Alpha+3 - _Improving Documentation_ - 2025-05-19
+
+- Rewrite `changelog.md` file to reflect updates.
