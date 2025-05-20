@@ -34,7 +34,13 @@ v\[BOT_VERSION]-\[STAGE]+\[BUILD_NUMBER]
 ## v0.1.0-Alpha+1 - _Inplement Ticket Staff Panel_ - 2025-05-20
 
 - Added `staff.ts` utility class and `openTicketPanel()` method.
+
   - Includes staff only controls.
   - Claiming
   - Transcripts
   - Ticket Locking
+
+## v0.1.0-Alpha+2 - _Inplement Ticket Staff Panel_ - 2025-05-20
+
+- Added `staff-ticket.ts` interactionCreate event
+- Linked `openTicketPanel()` to interactionCreate event.

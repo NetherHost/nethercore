@@ -98,3 +98,5 @@ class TicketStaff {
     }
   }
 }
+
+export default TicketStaff;

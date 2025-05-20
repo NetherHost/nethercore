@@ -2,6 +2,7 @@ import OpenTicket from "./open-ticket";
 import CloseTicket from "./close-ticket";
 import DeleteTicket from "./delete-ticket";
 import TicketTranscripts from "./transcript";
+import TicketStaff from "./staff";
 
 class Ticket {
   constructor() {}
@@ -20,6 +21,10 @@ class Ticket {
 
   public transcript() {
     return new TicketTranscripts();
+  }
+
+  public openStaffPanel() {
+    return new TicketStaff();
   }
 }
 
