@@ -8,7 +8,7 @@ v\[BOT_VERSION]-\[STAGE]+\[BUILD_NUMBER]
 
 - **BOT_VERSION**: Follows [Semantic Versioning](https://semver.org/) — `MAJOR.MINOR.PATCH`
 - **STAGE**: Indicates development phase — one of `Alpha`, `Beta`, or `Release`
-- **BUILD_NUMBER**: Tracks incremental builds within the current stage
+- **BUILD_NUMBER**: Tracks incremental builds within the current stage/`BOT_VERSION`
 
 ---
 
@@ -24,3 +24,7 @@ v\[BOT_VERSION]-\[STAGE]+\[BUILD_NUMBER]
 ## v0.0.1-Alpha+3 - _Improving Documentation_ - 2025-05-19
 
 - Rewrite `changelog.md` file to reflect updates.
+
+## v0.0.2-Alpha+1 - _Improving Documentation_ - 2025-05-19
+
+- Fix typo in `changelog.md`
