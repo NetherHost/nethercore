@@ -46,23 +46,32 @@ class TicketStaff {
           flags: [MessageFlags.Ephemeral],
         });
 
+      const buttons = [
+        {
+          label: "Claim",
+          customId: "ticket-staff-claim-button",
+        },
+        {
+          label: "Lock",
+          customId: "ticket-staff-lock-button",
+        },
+        {
+          label: "Transcript",
+          customId: "ticket-staff-transcript-button",
+        },
+        {
+          label: "Elevate",
+          customId: "ticket-staff-elevate-button",
+        },
+      ];
+
       const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-        new ButtonBuilder()
-          .setLabel("Claim")
-          .setCustomId("ticket-staff-claim-button")
-          .setStyle(ButtonStyle.Secondary),
-        new ButtonBuilder()
-          .setLabel("Lock")
-          .setCustomId("ticket-staff-lock-button")
-          .setStyle(ButtonStyle.Secondary),
-        new ButtonBuilder()
-          .setLabel("Transcript")
-          .setCustomId("ticket-staff-transcript-button")
-          .setStyle(ButtonStyle.Secondary),
-        new ButtonBuilder()
-          .setLabel("Elevate")
-          .setCustomId("ticket-staff-elevate-button")
-          .setStyle(ButtonStyle.Secondary)
+        buttons.map((button) =>
+          new ButtonBuilder()
+            .setLabel(button.label)
+            .setCustomId(button.customId)
+            .setStyle(ButtonStyle.Secondary)
+        )
       );
 
       await interaction.reply({
@@ -90,6 +99,7 @@ class TicketStaff {
               }
             ),
         ],
+        flags: [MessageFlags.Ephemeral],
         components: [row],
       });
     } catch (error: any) {
