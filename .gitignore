@@ -1,5 +1,7 @@
 .commandkit
 .vscode
+.idea
+*.sublime-project
 node_modules
 .env
 .env.*
