@@ -72,7 +72,7 @@ class OpenTicket {
           const newTicketSettings = new TicketSettings();
           await newTicketSettings.save();
           return interaction.reply({
-            content: `500 Internal Server Error: \`TicketSettingsDocument not found or invalid.\`\n\nCreating...`,
+            content: `500 Internal Server Error: \`A new TicketSetttings document was created. Please press the button again.\``,
             ephemeral: true,
           });
       }

@@ -13,9 +13,12 @@ export default async function (
   handler: CommandKit
 ) {
   if (!interaction.isButton()) return;
-  if (interaction.customId !== "ticket-staff-panel-button") return;
 
   const ticket = new Ticket();
 
-  await ticket.openStaffPanel().openStaffPanel({ interaction, client });
+  if (interaction.customId === "ticket-staff-panel-button") {
+    await ticket.staff().openStaffPanel({ interaction, client });
+  } else if (interaction.customId === "ticket-staff-claim-button") {
+    await ticket.staff().claimTicket({ interaction, client });
+  }
 }

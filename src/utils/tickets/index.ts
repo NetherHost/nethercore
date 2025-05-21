@@ -23,7 +23,7 @@ class Ticket {
     return new TicketTranscripts();
   }
 
-  public openStaffPanel() {
+  public staff() {
     return new TicketStaff();
   }
 }
