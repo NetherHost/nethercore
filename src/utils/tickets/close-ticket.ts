@@ -76,14 +76,6 @@ class CloseTicket {
 
         ticketData.responseTime = responseTime;
 
-        console.log(
-          `Ticket ${
-            ticketData.ticketId
-          } closed without staff response. Response time set to: ${responseTime}ms (${
-            responseTime / 1000 / 60
-          } minutes)`
-        );
-
         const ticketSettings =
           (await TicketSettings.findOne()) || new TicketSettings();
 
@@ -99,11 +91,6 @@ class CloseTicket {
         ticketSettings.stats.responseTimeLastUpdated = new Date();
 
         await ticketSettings.save();
-        console.log(
-          `Updated global stats: Average response time now ${
-            newAverage / 1000
-          } seconds`
-        );
       }
 
       ticketData.status = "closed";

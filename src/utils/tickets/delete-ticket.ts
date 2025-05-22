@@ -88,13 +88,23 @@ class DeleteTicket {
 
         ticketData.responseTime = responseTime;
 
-        console.log(
-          `Ticket ${
-            ticketData.ticketId
-          } deleted without staff response. Response time set to: ${responseTime}ms (${
-            responseTime / 1000 / 60
-          } minutes)`
-        );
+        let formattedTime = "";
+        if (responseTime < 1000) {
+          formattedTime = `${Math.round(responseTime)} milliseconds`;
+        } else if (responseTime < 60000) {
+          formattedTime = `${Math.round(responseTime / 1000)} seconds`;
+        } else {
+          const minutes = Math.floor(responseTime / 60000);
+          const seconds = Math.round((responseTime % 60000) / 1000);
+
+          if (seconds === 0) {
+            formattedTime = `${minutes} minute${minutes !== 1 ? "s" : ""}`;
+          } else {
+            formattedTime = `${minutes} minute${
+              minutes !== 1 ? "s" : ""
+            } ${seconds} second${seconds !== 1 ? "s" : ""}`;
+          }
+        }
 
         const ticketSettings =
           (await TicketSettings.findOne()) || new TicketSettings();
@@ -111,11 +121,24 @@ class DeleteTicket {
         ticketSettings.stats.responseTimeLastUpdated = new Date();
 
         await ticketSettings.save();
-        console.log(
-          `Updated global stats: Average response time now ${
-            newAverage / 1000
-          } seconds`
-        );
+
+        let formattedAverage = "";
+        if (newAverage < 1000) {
+          formattedAverage = `${Math.round(newAverage)} milliseconds`;
+        } else if (newAverage < 60000) {
+          formattedAverage = `${Math.round(newAverage / 1000)} seconds`;
+        } else {
+          const minutes = Math.floor(newAverage / 60000);
+          const seconds = Math.round((newAverage % 60000) / 1000);
+
+          if (seconds === 0) {
+            formattedAverage = `${minutes} minute${minutes !== 1 ? "s" : ""}`;
+          } else {
+            formattedAverage = `${minutes} minute${
+              minutes !== 1 ? "s" : ""
+            } ${seconds} second${seconds !== 1 ? "s" : ""}`;
+          }
+        }
       }
 
       ticketData.status = "deleted";
@@ -126,10 +149,6 @@ class DeleteTicket {
         (await TicketSettings.findOne()) || new TicketSettings();
       ticketSettings.stats.totalResolved += 1;
       await ticketSettings.save();
-
-      console.log(
-        `Ticket ${ticketData.ticketId} marked as resolved. Total resolved tickets: ${ticketSettings.stats.totalResolved}`
-      );
 
       await channel.delete();
     } catch (error: any) {

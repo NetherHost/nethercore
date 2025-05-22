@@ -245,11 +245,18 @@ class TicketStaff {
       if (averageMs < 1000) {
         formattedTime = `${Math.round(averageMs)} milliseconds`;
       } else if (averageMs < 60000) {
-        formattedTime = `${Math.round((averageMs / 1000) * 100) / 100} seconds`;
+        formattedTime = `${Math.round(averageMs / 1000)} seconds`;
       } else {
-        formattedTime = `${
-          Math.round((averageMs / 60000) * 100) / 100
-        } minutes`;
+        const minutes = Math.floor(averageMs / 60000);
+        const seconds = Math.round((averageMs % 60000) / 1000);
+
+        if (seconds === 0) {
+          formattedTime = `${minutes} minute${minutes !== 1 ? "s" : ""}`;
+        } else {
+          formattedTime = `${minutes} minute${
+            minutes !== 1 ? "s" : ""
+          } ${seconds} second${seconds !== 1 ? "s" : ""}`;
+        }
       }
 
       const lastUpdated = ticketSettings.stats.responseTimeLastUpdated

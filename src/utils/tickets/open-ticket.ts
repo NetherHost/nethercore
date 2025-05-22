@@ -214,13 +214,18 @@ class OpenTicket {
           if (averageMs < 1000) {
             formattedTime = `${Math.round(averageMs)} milliseconds`;
           } else if (averageMs < 60000) {
-            formattedTime = `${
-              Math.round((averageMs / 1000) * 100) / 100
-            } seconds`;
+            formattedTime = `${Math.round(averageMs / 1000)} seconds`;
           } else {
-            formattedTime = `${
-              Math.round((averageMs / 60000) * 100) / 100
-            } minutes`;
+            const minutes = Math.floor(averageMs / 60000);
+            const seconds = Math.round((averageMs % 60000) / 1000);
+
+            if (seconds === 0) {
+              formattedTime = `${minutes} minute${minutes !== 1 ? "s" : ""}`;
+            } else {
+              formattedTime = `${minutes} minute${
+                minutes !== 1 ? "s" : ""
+              } ${seconds} second${seconds !== 1 ? "s" : ""}`;
+            }
           }
         }
 
@@ -262,29 +267,17 @@ class OpenTicket {
                   name: "Ticket ID",
                   value: `\`${newTicket.ticketId}\``,
                   inline: false,
-                }
-              )
-              .setColor("Red"),
-            new EmbedBuilder()
-              .setTitle("📊 Support Statistics")
-              .addFields(
-                {
-                  name: "Average Response",
-                  value: formattedTime,
-                  inline: true,
                 },
                 {
-                  name: "Tickets Resolved",
-                  value: `${ticketSettings.stats?.totalResolved || 0}`,
-                  inline: true,
-                },
-                {
-                  name: "Total Tickets",
-                  value: `${ticketSettings.totalTickets || 0}`,
-                  inline: true,
+                  name: "📊 Support Statistics",
+                  value: `**Average Response:** ${formattedTime}\n**Tickets Resolved:** ${
+                    ticketSettings.stats?.totalResolved || 0
+                  }\n**Total Tickets:** ${ticketSettings.totalTickets || 0}`,
+                  inline: false,
                 }
               )
               .setColor("Red")
+              .setFooter({ text: "Nether Host Support" })
               .setTimestamp(),
           ],
           components: [
