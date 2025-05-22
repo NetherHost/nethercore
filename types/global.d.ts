@@ -31,10 +31,6 @@ export interface Ticket {
 
 export interface User {
   userId: string;
-  linked: {
-    isLinked: boolean;
-    email?: string;
-  };
   isStaff: boolean;
   timestamps: {
     joinedAt?: number;

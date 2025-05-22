@@ -5,10 +5,6 @@ export interface UserDocument extends UserProps, Document {}
 
 const userSchema = new Schema<UserDocument>({
   userId: { type: String, required: true, unique: true },
-  linked: {
-    isLinked: { type: Boolean, default: false },
-    email: { type: String },
-  },
   isStaff: { type: Boolean, default: false },
   timestamps: {
     joinedAt: { type: Date },

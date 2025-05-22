@@ -1,6 +1,3 @@
-// src/classes/TicketTranscripts.ts
-
-import { File } from "buffer";
 import {
   ActionRowBuilder,
   AttachmentBuilder,

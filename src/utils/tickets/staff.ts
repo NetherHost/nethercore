@@ -4,29 +4,16 @@ import {
   ButtonBuilder,
   ButtonInteraction,
   ButtonStyle,
-  ChannelType,
   Client,
-  ComponentType,
   EmbedBuilder,
-  Guild,
   GuildMember,
   MessageFlags,
-  PermissionsBitField,
-  StringSelectMenuBuilder,
-  StringSelectMenuOptionBuilder,
   TextChannel,
-  Message,
 } from "discord.js";
 import Tickets from "../../models/Tickets";
 import Ticket from "./index";
 import TicketSettings from "../../models/TicketSettings";
-import User from "../../models/User";
-import {
-  type Ticket as TicketProps,
-  type User as UserProps,
-} from "../../../types/global";
 import config from "../../config";
-import { CommandKit } from "commandkit";
 
 interface TicketStaffProps {
   interaction: ButtonInteraction;

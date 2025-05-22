@@ -13,7 +13,6 @@ import {
   PermissionsBitField,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
-  TextChannel,
 } from "discord.js";
 import Tickets from "../../models/Tickets";
 import TicketSettings from "../../models/TicketSettings";
@@ -23,6 +22,7 @@ import {
   type User as UserProps,
 } from "../../../types/global";
 import config from "../../config";
+import { checkUserLinked } from "../../utils/api";
 
 interface OpenTicketProps {
   interaction: ButtonInteraction;
@@ -57,7 +57,7 @@ class OpenTicket {
           if (!member?.roles.cache.has("1288653045453819934")) {
             return interaction.reply({
               content: `403 Forbidden: \`Only users with the "Client" role can open tickets at this time.\``,
-              ephemeral: true,
+              flags: [MessageFlags.Ephemeral],
             });
           }
           break;
@@ -65,7 +65,7 @@ class OpenTicket {
         case "CLOSED":
           return interaction.reply({
             content: `403 Forbidden: \`Ticket creation is currently disabled.\``,
-            ephemeral: true,
+            flags: [MessageFlags.Ephemeral],
           });
 
         default:
@@ -73,7 +73,7 @@ class OpenTicket {
           await newTicketSettings.save();
           return interaction.reply({
             content: `500 Internal Server Error: \`A new TicketSetttings document was created. Please press the button again.\``,
-            ephemeral: true,
+            flags: [MessageFlags.Ephemeral],
           });
       }
 
@@ -88,14 +88,17 @@ class OpenTicket {
           }\n**Banned At:** <t:${Math.floor(
             ticketBanned.bannedAt.getTime() / 1000
           )}:F>`,
-          ephemeral: true,
-        });
-
-      if (!userData.linked.isLinked)
-        return interaction.reply({
-          content: `403 Forbidden: \`Your account must be linked to open a ticket.\``,
           flags: [MessageFlags.Ephemeral],
         });
+
+      const apiResponse = await checkUserLinked(interaction.user.id);
+
+      if (!apiResponse.success) {
+        return interaction.reply({
+          content: `403 Forbidden: \`Your account must be linked to open a ticket.\`\n\nPlease link your account at https://nether.host/link-discord`,
+          flags: [MessageFlags.Ephemeral],
+        });
+      }
 
       const existingTicket: TicketProps | null = await Tickets.findOne({
         userId: interaction.user.id,
@@ -105,6 +108,7 @@ class OpenTicket {
       if (existingTicket)
         return interaction.reply({
           content: `409 Conflict: \`You already have a ticket open.\` - <#${existingTicket.ticketId}>`,
+          flags: [MessageFlags.Ephemeral],
         });
 
       const departments = [
@@ -232,27 +236,24 @@ class OpenTicket {
         await ticketChannel.send({
           embeds: [
             new EmbedBuilder()
-              .setTitle(`🎫 Support Ticket #${ticketSettings.totalTickets}`)
               .setDescription(
-                `Welcome ${interaction.user}!\n\n` +
-                  `Our support team will be with you shortly. In the meantime, please:\n\n` +
-                  `- Describe your issue in detail\n` +
-                  `- Share any relevant screenshots\n` +
-                  `- Provide error logs if applicable\n` +
-                  `- Include steps to reproduce the issue`
+                [
+                  `### 🎫 Support Ticket #${ticketSettings.totalTickets}`,
+                  ``,
+                  `Welcome ${interaction.user}!`,
+                  ``,
+                  `Our support team will be with you shortly. In the meantime, please:`,
+                  `- Describe your issue in detail`,
+                  `- Share any relevant screenshots`,
+                  `- Provide error logs if applicable`,
+                  `- Include steps to reproduce the issue`,
+                  `### 📝 Ticket Details (For Staff)`,
+                ].join("\n")
               )
-              .setColor("Red"),
-            new EmbedBuilder()
-              .setTitle("📝 Ticket Details")
               .addFields(
                 {
-                  name: "User",
-                  value: `${interaction.user}`,
-                  inline: true,
-                },
-                {
                   name: "Email",
-                  value: `${userData.linked.email ?? "Not Provided"}`,
+                  value: `${apiResponse.user?.email ?? "Not Provided"}`,
                   inline: true,
                 },
                 {
@@ -263,21 +264,18 @@ class OpenTicket {
                   }`,
                   inline: true,
                 },
+                // {
+                //   name: "Ticket ID",
+                //   value: `\`${newTicket.ticketId}\``,
+                //   inline: true,
+                // },
                 {
-                  name: "Ticket ID",
-                  value: `\`${newTicket.ticketId}\``,
-                  inline: false,
-                },
-                {
-                  name: "📊 Support Statistics",
-                  value: `**Average Response:** ${formattedTime}\n**Tickets Resolved:** ${
-                    ticketSettings.stats?.totalResolved || 0
-                  }\n**Total Tickets:** ${ticketSettings.totalTickets || 0}`,
-                  inline: false,
+                  name: "Average Response",
+                  value: `${formattedTime}`,
+                  inline: true,
                 }
               )
               .setColor("Red")
-              .setFooter({ text: "Nether Host Support" })
               .setTimestamp(),
           ],
           components: [

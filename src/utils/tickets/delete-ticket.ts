@@ -1,28 +1,14 @@
 import {
-  ActionRowBuilder,
-  ButtonBuilder,
   ButtonInteraction,
-  ButtonStyle,
-  ChannelType,
   Client,
-  ComponentType,
-  EmbedBuilder,
-  Guild,
   GuildMember,
   MessageFlags,
-  PermissionsBitField,
-  StringSelectMenuBuilder,
-  StringSelectMenuOptionBuilder,
   TextChannel,
   NewsChannel,
 } from "discord.js";
 import Tickets from "../../models/Tickets";
 import TicketSettings from "../../models/TicketSettings";
 import User from "../../models/User";
-import {
-  type Ticket as TicketProps,
-  type User as UserProps,
-} from "../../../types/global";
 import config from "../../config";
 
 interface DeleteTicketProps {
@@ -88,24 +74,6 @@ class DeleteTicket {
 
         ticketData.responseTime = responseTime;
 
-        let formattedTime = "";
-        if (responseTime < 1000) {
-          formattedTime = `${Math.round(responseTime)} milliseconds`;
-        } else if (responseTime < 60000) {
-          formattedTime = `${Math.round(responseTime / 1000)} seconds`;
-        } else {
-          const minutes = Math.floor(responseTime / 60000);
-          const seconds = Math.round((responseTime % 60000) / 1000);
-
-          if (seconds === 0) {
-            formattedTime = `${minutes} minute${minutes !== 1 ? "s" : ""}`;
-          } else {
-            formattedTime = `${minutes} minute${
-              minutes !== 1 ? "s" : ""
-            } ${seconds} second${seconds !== 1 ? "s" : ""}`;
-          }
-        }
-
         const ticketSettings =
           (await TicketSettings.findOne()) || new TicketSettings();
 
@@ -121,24 +89,6 @@ class DeleteTicket {
         ticketSettings.stats.responseTimeLastUpdated = new Date();
 
         await ticketSettings.save();
-
-        let formattedAverage = "";
-        if (newAverage < 1000) {
-          formattedAverage = `${Math.round(newAverage)} milliseconds`;
-        } else if (newAverage < 60000) {
-          formattedAverage = `${Math.round(newAverage / 1000)} seconds`;
-        } else {
-          const minutes = Math.floor(newAverage / 60000);
-          const seconds = Math.round((newAverage % 60000) / 1000);
-
-          if (seconds === 0) {
-            formattedAverage = `${minutes} minute${minutes !== 1 ? "s" : ""}`;
-          } else {
-            formattedAverage = `${minutes} minute${
-              minutes !== 1 ? "s" : ""
-            } ${seconds} second${seconds !== 1 ? "s" : ""}`;
-          }
-        }
       }
 
       ticketData.status = "deleted";
