@@ -11,6 +11,7 @@ import {
 } from "discord.js";
 import Tickets from "../../models/Tickets";
 import User from "../../models/User";
+import TicketSettings from "../../models/TicketSettings";
 import config from "../../config";
 
 interface CloseTicketProps {
@@ -64,6 +65,45 @@ class CloseTicket {
             "500 Internal Server Error: `Channel not found or not a guild text-based channel.`",
           flags: [MessageFlags.Ephemeral],
         });
+      }
+
+      if (!ticketData.timestamps.firstResponseAt) {
+        ticketData.timestamps.firstResponseAt = Date.now();
+
+        const createdAt = ticketData.timestamps.createdAt;
+        const respondedAt = Date.now();
+        const responseTime = respondedAt - createdAt;
+
+        ticketData.responseTime = responseTime;
+
+        console.log(
+          `Ticket ${
+            ticketData.ticketId
+          } closed without staff response. Response time set to: ${responseTime}ms (${
+            responseTime / 1000 / 60
+          } minutes)`
+        );
+
+        const ticketSettings =
+          (await TicketSettings.findOne()) || new TicketSettings();
+
+        const currentTotal =
+          ticketSettings.stats.averageResponseTime *
+          ticketSettings.stats.totalTicketsWithResponse;
+        const newTotal = currentTotal + responseTime;
+        const newCount = ticketSettings.stats.totalTicketsWithResponse + 1;
+        const newAverage = newTotal / newCount;
+
+        ticketSettings.stats.averageResponseTime = newAverage;
+        ticketSettings.stats.totalTicketsWithResponse = newCount;
+        ticketSettings.stats.responseTimeLastUpdated = new Date();
+
+        await ticketSettings.save();
+        console.log(
+          `Updated global stats: Average response time now ${
+            newAverage / 1000
+          } seconds`
+        );
       }
 
       ticketData.status = "closed";

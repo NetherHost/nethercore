@@ -79,6 +79,45 @@ class DeleteTicket {
           flags: [MessageFlags.Ephemeral],
         });
 
+      if (!ticketData.timestamps.firstResponseAt) {
+        ticketData.timestamps.firstResponseAt = Date.now();
+
+        const createdAt = ticketData.timestamps.createdAt;
+        const respondedAt = Date.now();
+        const responseTime = respondedAt - createdAt;
+
+        ticketData.responseTime = responseTime;
+
+        console.log(
+          `Ticket ${
+            ticketData.ticketId
+          } deleted without staff response. Response time set to: ${responseTime}ms (${
+            responseTime / 1000 / 60
+          } minutes)`
+        );
+
+        const ticketSettings =
+          (await TicketSettings.findOne()) || new TicketSettings();
+
+        const currentTotal =
+          ticketSettings.stats.averageResponseTime *
+          ticketSettings.stats.totalTicketsWithResponse;
+        const newTotal = currentTotal + responseTime;
+        const newCount = ticketSettings.stats.totalTicketsWithResponse + 1;
+        const newAverage = newTotal / newCount;
+
+        ticketSettings.stats.averageResponseTime = newAverage;
+        ticketSettings.stats.totalTicketsWithResponse = newCount;
+        ticketSettings.stats.responseTimeLastUpdated = new Date();
+
+        await ticketSettings.save();
+        console.log(
+          `Updated global stats: Average response time now ${
+            newAverage / 1000
+          } seconds`
+        );
+      }
+
       ticketData.status = "deleted";
       ticketData.timestamps.deletedAt = Date.now();
       await ticketData.save();
@@ -87,6 +126,10 @@ class DeleteTicket {
         (await TicketSettings.findOne()) || new TicketSettings();
       ticketSettings.stats.totalResolved += 1;
       await ticketSettings.save();
+
+      console.log(
+        `Ticket ${ticketData.ticketId} marked as resolved. Total resolved tickets: ${ticketSettings.stats.totalResolved}`
+      );
 
       await channel.delete();
     } catch (error: any) {
