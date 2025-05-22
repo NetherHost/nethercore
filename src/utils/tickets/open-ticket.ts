@@ -93,7 +93,7 @@ class OpenTicket {
 
       const apiResponse = await checkUserLinked(interaction.user.id);
 
-      if (!apiResponse.success) {
+      if (!apiResponse.success || !apiResponse.linked) {
         return interaction.reply({
           content: `403 Forbidden: \`Your account must be linked to open a ticket.\`\n\nPlease link your account at https://nether.host/link-discord`,
           flags: [MessageFlags.Ephemeral],
