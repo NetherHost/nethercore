@@ -83,6 +83,11 @@ class DeleteTicket {
       ticketData.timestamps.deletedAt = Date.now();
       await ticketData.save();
 
+      const ticketSettings =
+        (await TicketSettings.findOne()) || new TicketSettings();
+      ticketSettings.stats.totalResolved += 1;
+      await ticketSettings.save();
+
       await channel.delete();
     } catch (error: any) {
       console.error(error);

@@ -15,6 +15,7 @@ import {
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
   TextChannel,
+  Message,
 } from "discord.js";
 import Tickets from "../../models/Tickets";
 import Ticket from "./index";
@@ -25,6 +26,7 @@ import {
   type User as UserProps,
 } from "../../../types/global";
 import config from "../../config";
+import { CommandKit } from "commandkit";
 
 interface TicketStaffProps {
   interaction: ButtonInteraction;
@@ -54,10 +56,14 @@ class TicketStaff {
           customId: "ticket-staff-claim-button",
           disabled: false,
         },
-
         {
           label: "Transcript",
           customId: "ticket-staff-transcript-button",
+          disabled: false,
+        },
+        {
+          label: "Stats",
+          customId: "ticket-staff-stats-button",
           disabled: false,
         },
         {
@@ -96,6 +102,10 @@ class TicketStaff {
               {
                 name: `Transcript`,
                 value: `Force a transcipt to be generated, even if the user didn't request one.`,
+              },
+              {
+                name: `Stats`,
+                value: `View average response time statistics for tickets.`,
               },
               {
                 name: `Lock`,
@@ -215,6 +225,78 @@ class TicketStaff {
     } catch (error: any) {
       console.error(error);
       console.error(error.stack);
+    }
+  }
+
+  public async getResponseTimeStats({ interaction, client }: TicketStaffProps) {
+    try {
+      const ticketSettings = await TicketSettings.findOne();
+
+      if (!ticketSettings) {
+        return interaction.reply({
+          content: "No ticket settings found. Please try again later.",
+          flags: [MessageFlags.Ephemeral],
+        });
+      }
+
+      const averageMs = ticketSettings.stats.averageResponseTime;
+      let formattedTime = "";
+
+      if (averageMs < 1000) {
+        formattedTime = `${Math.round(averageMs)} milliseconds`;
+      } else if (averageMs < 60000) {
+        formattedTime = `${Math.round((averageMs / 1000) * 100) / 100} seconds`;
+      } else {
+        formattedTime = `${
+          Math.round((averageMs / 60000) * 100) / 100
+        } minutes`;
+      }
+
+      const lastUpdated = ticketSettings.stats.responseTimeLastUpdated
+        ? `<t:${Math.floor(
+            ticketSettings.stats.responseTimeLastUpdated.getTime() / 1000
+          )}:R>`
+        : "Never";
+
+      await interaction.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setTitle("Ticket Statistics")
+            .setDescription("Current statistics for the ticket system")
+            .setColor("Red")
+            .addFields(
+              {
+                name: "Average Response Time",
+                value: formattedTime,
+                inline: true,
+              },
+              {
+                name: "Total Tickets Analyzed",
+                value: `${ticketSettings.stats.totalTicketsWithResponse}`,
+                inline: true,
+              },
+              {
+                name: "Total Tickets Resolved",
+                value: `${ticketSettings.stats.totalResolved}`,
+                inline: true,
+              },
+              {
+                name: "Last Updated",
+                value: lastUpdated,
+              }
+            ),
+        ],
+        flags: [MessageFlags.Ephemeral],
+      });
+    } catch (error: any) {
+      console.error(error);
+      console.error(error.stack);
+
+      await interaction.reply({
+        content:
+          "500 Server Error: `Error retrieving response time statistics.`",
+        flags: [MessageFlags.Ephemeral],
+      });
     }
   }
 }

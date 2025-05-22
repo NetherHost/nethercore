@@ -207,35 +207,81 @@ class OpenTicket {
         await ticketSettings.save();
         await newTicket.save();
 
+        let formattedTime = "Not available";
+        if (ticketSettings.stats && ticketSettings.stats.averageResponseTime) {
+          const averageMs = ticketSettings.stats.averageResponseTime;
+
+          if (averageMs < 1000) {
+            formattedTime = `${Math.round(averageMs)} milliseconds`;
+          } else if (averageMs < 60000) {
+            formattedTime = `${
+              Math.round((averageMs / 1000) * 100) / 100
+            } seconds`;
+          } else {
+            formattedTime = `${
+              Math.round((averageMs / 60000) * 100) / 100
+            } minutes`;
+          }
+        }
+
         await ticketChannel.send({
           embeds: [
             new EmbedBuilder()
-              .setTitle(`Support Ticket ${ticketSettings.totalTickets}`)
+              .setTitle(`🎫 Support Ticket #${ticketSettings.totalTickets}`)
               .setDescription(
-                `Thank you for opening a ticket, ${interaction.user}. Staff will be with you shortly.\n\nIn the meantime, please describe your issue in detail. Provide logs, screenshots, or other information you believe will assist us.`
+                `Welcome ${interaction.user}!\n\n` +
+                  `Our support team will be with you shortly. In the meantime, please:\n\n` +
+                  `- Describe your issue in detail\n` +
+                  `- Share any relevant screenshots\n` +
+                  `- Provide error logs if applicable\n` +
+                  `- Include steps to reproduce the issue`
               )
               .setColor("Red"),
             new EmbedBuilder()
-              .setTitle("Ticket Information")
-              .setDescription(
-                "Here is some information about the ticket and its creator:"
-              )
+              .setTitle("📝 Ticket Details")
               .addFields(
                 {
                   name: "User",
                   value: `${interaction.user}`,
+                  inline: true,
                 },
                 {
                   name: "Email",
-                  value: `${userData.linked.email ?? "Unknown"}`,
-                },
-                {
-                  name: "Ticket ID",
-                  value: `${newTicket.ticketId}`,
+                  value: `${userData.linked.email ?? "Not Provided"}`,
+                  inline: true,
                 },
                 {
                   name: "Department",
-                  value: `${newTicket.department}`,
+                  value: `${
+                    newTicket.department.charAt(0).toUpperCase() +
+                    newTicket.department.slice(1)
+                  }`,
+                  inline: true,
+                },
+                {
+                  name: "Ticket ID",
+                  value: `\`${newTicket.ticketId}\``,
+                  inline: false,
+                }
+              )
+              .setColor("Red"),
+            new EmbedBuilder()
+              .setTitle("📊 Support Statistics")
+              .addFields(
+                {
+                  name: "Average Response",
+                  value: formattedTime,
+                  inline: true,
+                },
+                {
+                  name: "Tickets Resolved",
+                  value: `${ticketSettings.stats?.totalResolved || 0}`,
+                  inline: true,
+                },
+                {
+                  name: "Total Tickets",
+                  value: `${ticketSettings.totalTickets || 0}`,
+                  inline: true,
                 }
               )
               .setColor("Red")

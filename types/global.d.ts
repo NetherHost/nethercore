@@ -24,7 +24,9 @@ export interface Ticket {
     attendedToAt?: number;
     closedAt?: number;
     deletedAt?: number;
+    firstResponseAt?: number;
   };
+  responseTime?: number;
 }
 
 export interface User {

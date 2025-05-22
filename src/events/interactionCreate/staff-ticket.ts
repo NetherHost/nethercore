@@ -22,5 +22,7 @@ export default async function (
     await ticket.staff().claimTicket({ interaction, client });
   } else if (interaction.customId === "ticket-staff-transcript-button") {
     await ticket.staff().transcriptTicket({ interaction, client });
+  } else if (interaction.customId === "ticket-staff-stats-button") {
+    await ticket.staff().getResponseTimeStats({ interaction, client });
   }
 }

@@ -54,7 +54,8 @@ export default async function (
   } catch (error: any) {
     console.error("Transcript handling failed:", error);
     await interaction.editReply({
-      content: "An unexpected error occurred while saving the transcript.",
+      content:
+        "500 Server Error: `An unexpected error occurred while saving the transcript.`",
     });
   }
 }

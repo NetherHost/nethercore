@@ -11,6 +11,12 @@ export interface TicketSettingsProps {
     autoClaimOnMessage: boolean;
     onlyOneClaimer: boolean;
   };
+  stats: {
+    totalResolved: number;
+    averageResponseTime: number; // in milliseconds
+    responseTimeLastUpdated?: Date;
+    totalTicketsWithResponse: number;
+  };
   totalTickets?: number;
   ticketBanList?: Array<{
     userId: string;
@@ -36,6 +42,12 @@ const ticketSettingsSchema = new Schema<TicketSettingsDocument>({
     enabled: { type: Boolean },
     autoClaimOnMessage: { type: Boolean, default: false },
     onlyOneClaimer: { type: Boolean, default: true },
+  },
+  stats: {
+    totalResolved: { type: Number, default: 0 },
+    averageResponseTime: { type: Number, default: 0 }, // in milliseconds
+    responseTimeLastUpdated: { type: Date },
+    totalTicketsWithResponse: { type: Number, default: 0 },
   },
   totalTickets: { type: Number, default: 0 },
   ticketBanList: [
