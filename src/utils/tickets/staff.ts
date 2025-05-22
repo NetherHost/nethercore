@@ -1,5 +1,6 @@
 import {
   ActionRowBuilder,
+  AttachmentBuilder,
   ButtonBuilder,
   ButtonInteraction,
   ButtonStyle,
@@ -16,6 +17,7 @@ import {
   TextChannel,
 } from "discord.js";
 import Tickets from "../../models/Tickets";
+import Ticket from "./index";
 import TicketSettings from "../../models/TicketSettings";
 import User from "../../models/User";
 import {
@@ -50,18 +52,23 @@ class TicketStaff {
         {
           label: "Claim",
           customId: "ticket-staff-claim-button",
+          disabled: false,
+        },
+
+        {
+          label: "Transcript",
+          customId: "ticket-staff-transcript-button",
+          disabled: false,
         },
         {
           label: "Lock",
           customId: "ticket-staff-lock-button",
-        },
-        {
-          label: "Transcript",
-          customId: "ticket-staff-transcript-button",
+          disabled: true,
         },
         {
           label: "Elevate",
           customId: "ticket-staff-elevate-button",
+          disabled: true,
         },
       ];
 
@@ -71,6 +78,7 @@ class TicketStaff {
             .setLabel(button.label)
             .setCustomId(button.customId)
             .setStyle(ButtonStyle.Secondary)
+            .setDisabled(button.disabled)
         )
       );
 
@@ -86,12 +94,12 @@ class TicketStaff {
                 value: `Indicate that you're managing this ticket. Press again to unclaim.`,
               },
               {
-                name: `Lock`,
-                value: `Temporarily locks this ticket. This is different from closing it.`,
-              },
-              {
                 name: `Transcript`,
                 value: `Force a transcipt to be generated, even if the user didn't request one.`,
+              },
+              {
+                name: `Lock`,
+                value: `Temporarily locks this ticket. This is different from closing it.`,
               },
               {
                 name: `Elevate`,
@@ -175,6 +183,33 @@ class TicketStaff {
 
       return await interaction.reply({
         content: `You have successfully claimed this ticket.`,
+        flags: [MessageFlags.Ephemeral],
+      });
+    } catch (error: any) {
+      console.error(error);
+      console.error(error.stack);
+    }
+  }
+
+  public async transcriptTicket({ interaction, client }: TicketStaffProps) {
+    try {
+      const ticket = new Ticket();
+      const transcriptHandler = ticket.transcript();
+      const channel = interaction.channel as TextChannel;
+      const messages = await transcriptHandler.getMessages({ channel });
+      const content = transcriptHandler.formatMessages(messages);
+
+      const transcript = await transcriptHandler.saveTranscript({
+        content,
+        channel,
+      });
+
+      const files =
+        transcript !== null ? [new AttachmentBuilder(transcript)] : [];
+
+      await interaction.reply({
+        content: "Here is the ticket transcript.",
+        files,
         flags: [MessageFlags.Ephemeral],
       });
     } catch (error: any) {
