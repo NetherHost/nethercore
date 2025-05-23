@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { CommandKit } from "commandkit";
-import { Client, GatewayIntentBits } from "discord.js";
+import { Client, GatewayIntentBits, MessageFlags } from "discord.js";
 import Database from "./utils/database";
 
 const client = new Client({

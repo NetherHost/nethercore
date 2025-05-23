@@ -32,6 +32,7 @@ const ticketSchema = new Schema<TicketDocument>({
     closedAt: { type: Date },
     deletedAt: { type: Date },
     firstResponseAt: { type: Date },
+    reopenedAt: { type: Date },
   },
 
   responseTime: { type: Number },

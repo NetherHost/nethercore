@@ -108,7 +108,7 @@ class CloseTicket {
           .setStyle(ButtonStyle.Secondary),
         new ButtonBuilder()
           .setLabel("Re-open")
-          .setCustomId("reopen-ticket-button")
+          .setCustomId("ticket-reopen-button")
           .setStyle(ButtonStyle.Secondary)
       );
 

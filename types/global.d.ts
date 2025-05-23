@@ -25,6 +25,7 @@ export interface Ticket {
     closedAt?: number;
     deletedAt?: number;
     firstResponseAt?: number;
+    reopenedAt?: number;
   };
   responseTime?: number;
 }

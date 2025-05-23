@@ -11,6 +11,10 @@ class Ticket {
     return new OpenTicket();
   }
 
+  public reopen() {
+    return new OpenTicket();
+  }
+
   public close() {
     return new CloseTicket();
   }

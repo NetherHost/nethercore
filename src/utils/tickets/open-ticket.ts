@@ -13,6 +13,8 @@ import {
   PermissionsBitField,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
+  TextChannel,
+  NewsChannel,
 } from "discord.js";
 import Tickets from "../../models/Tickets";
 import TicketSettings from "../../models/TicketSettings";
@@ -91,13 +93,25 @@ class OpenTicket {
           flags: [MessageFlags.Ephemeral],
         });
 
-      const apiResponse = await checkUserLinked(interaction.user.id);
+      let apiResponse: Awaited<ReturnType<typeof checkUserLinked>> = {
+        success: true,
+        linked: true,
+        user: {
+          id: 0,
+          username: "development",
+          email: "development@nether.host",
+        },
+      };
 
-      if (!apiResponse.success || !apiResponse.linked) {
-        return interaction.reply({
-          content: `403 Forbidden: \`Your account must be linked to open a ticket.\`\n\nPlease link your account at https://nether.host/link-discord`,
-          flags: [MessageFlags.Ephemeral],
-        });
+      if (process.env.NODE_ENV === "production") {
+        apiResponse = await checkUserLinked(interaction.user.id);
+
+        if (!apiResponse.success || !apiResponse.linked) {
+          return interaction.reply({
+            content: `403 Forbidden: \`Your account must be linked to open a ticket.\`\n\nPlease link your account at https://nether.host/link-discord`,
+            flags: [MessageFlags.Ephemeral],
+          });
+        }
       }
 
       const existingTicket: TicketProps | null = await Tickets.findOne({
@@ -311,6 +325,83 @@ class OpenTicket {
     } catch (error: any) {
       console.error(error);
       console.error(error.stack);
+    }
+  }
+
+  public async reopen({
+    interaction,
+    client,
+  }: OpenTicketProps): Promise<unknown> {
+    try {
+      const channel = interaction.channel as TextChannel | NewsChannel;
+      const userData = await User.findOne({ userId: interaction.user.id });
+
+      if (!userData)
+        return interaction.reply({
+          content: `404 Not Found: \`UserDocument for ${interaction.user.id} not found in remote database.\``,
+          flags: [MessageFlags.Ephemeral],
+        });
+
+      const ticketData = await Tickets.findOne({
+        ticketId: channel.id,
+      });
+
+      if (!ticketData)
+        return interaction.reply({
+          content: `404 Not Found: \`TicketsDocument not found in remote database.\``,
+          flags: [MessageFlags.Ephemeral],
+        });
+
+      if (ticketData.status !== "closed") {
+        return interaction.reply({
+          content: `409 Conflict: \`This ticket is not closed. Current status: ${ticketData.status}\`.`,
+          flags: [MessageFlags.Ephemeral],
+        });
+      }
+
+      const isStaff = config.staff.staffRoleIds.some((roleId) =>
+        (interaction.member as GuildMember)?.roles.cache.has(roleId)
+      );
+
+      if (ticketData.userId !== interaction.user.id && !isStaff) {
+        return interaction.reply({
+          content: `403 Forbidden: \`Only the ticket creator or staff members can reopen this ticket.\``,
+          flags: [MessageFlags.Ephemeral],
+        });
+      }
+
+      await channel.permissionOverwrites.edit(ticketData.userId, {
+        SendMessages: true,
+        AddReactions: true,
+      });
+
+      ticketData.status = "open";
+      ticketData.timestamps.reopenedAt = Date.now();
+      await ticketData.save();
+
+      await channel.edit({
+        parent: config.tickets.parentCategoryId,
+      });
+
+      await interaction.update({
+        embeds: [
+          new EmbedBuilder()
+            .setTitle("Ticket Reopened")
+            .setDescription(
+              `This ticket has been reopened by ${interaction.user}`
+            )
+            .setColor("Red"),
+        ],
+        components: [],
+      });
+    } catch (error: any) {
+      console.error(error);
+      console.error(error.stack);
+
+      return interaction.reply({
+        content: `500 Internal Server Error: \`An error occurred while reopening the ticket.\``,
+        flags: [MessageFlags.Ephemeral],
+      });
     }
   }
 }
