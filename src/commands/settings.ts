@@ -5,8 +5,8 @@ import {
   EmbedBuilder,
   MessageFlags,
 } from "discord.js";
-import TicketSettings from "../../models/TicketSettings";
-import GiveawaySettings from "../../models/GiveawaySettings";
+import TicketSettings from "../models/TicketSettings";
+import GiveawaySettings from "../models/GiveawaySettings";
 
 export const data: CommandData = {
   name: "settings",

@@ -9,7 +9,7 @@ import {
 } from "discord.js";
 import type { CommandData, SlashCommandProps } from "commandkit";
 import os from "node:os";
-import { version } from "../../../package.json";
+import { version } from "../../package.json";
 import { execSync } from "child_process";
 const commit = execSync("git rev-parse --short HEAD").toString().trim();
 

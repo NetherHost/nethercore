@@ -7,7 +7,7 @@ import {
   PermissionsBitField,
 } from "discord.js";
 import type { CommandData, SlashCommandProps } from "commandkit";
-import Giveaway from "../../utils/giveaway";
+import Giveaway from "../utils/giveaway";
 
 export const data: CommandData = {
   name: "giveaway",

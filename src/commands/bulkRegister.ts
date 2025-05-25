@@ -1,6 +1,6 @@
 import type { CommandData, SlashCommandProps } from "commandkit";
 import { ApplicationCommandOptionType, PermissionsBitField } from "discord.js";
-import { bulkRegisterUsers } from "../../utils/register";
+import { bulkRegisterUsers } from "../utils/register";
 
 export const data: CommandData = {
   name: "bulk-register",
