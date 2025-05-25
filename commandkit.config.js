@@ -4,7 +4,7 @@ export default defineConfig({
   src: "src",
   main: "index.js",
   outDir: "dist",
-  watch: true,
+  watch: false,
   sourcemap: true,
   antiCrash: true,
   envExtra: true,
