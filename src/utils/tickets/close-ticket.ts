@@ -37,7 +37,6 @@ class CloseTicket {
         });
 
       const ticketData = await Tickets.findOne({
-        userId: interaction.user.id,
         ticketId: channel.id,
       });
 
