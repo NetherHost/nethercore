@@ -9,4 +9,5 @@ export default defineConfig({
   antiCrash: true,
   envExtra: true,
   minify: true,
+  clearRestartLogs: false,
 });
