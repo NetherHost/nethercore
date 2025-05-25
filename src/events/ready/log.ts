@@ -1,6 +1,7 @@
 import "dotenv/config";
 
 import type { Client } from "discord.js";
+import { ActivityType } from "discord.js";
 import type { CommandKit } from "commandkit";
 import cache from "../../utils/cache";
 
@@ -11,6 +12,8 @@ export default function (
 ) {
   console.log(`${client.user.username} is online!`);
   cache.set("ready", true);
+
+  client.user.setActivity("nether.host", { type: ActivityType.Watching });
 
   setInterval(() => {
     cache.cleanUp();

@@ -39,3 +39,35 @@ export interface User {
     createdAt?: number;
   };
 }
+
+export interface Giveaway {
+  id: number;
+  prize: string;
+  duration: number;
+  messageId: string;
+  channelId: string;
+  winnerCount: number;
+  requiredRole: string | null;
+  pingRole: string | null;
+  startTime: number;
+  endTime: number;
+  participants: string[];
+  winners: string[];
+  ended: boolean;
+}
+
+export interface GiveawaySettings {
+  totalGiveaways: number;
+  access: "ENABLED" | "DISABLED";
+  defaultDuration: number;
+  defaultWinnerCount: number;
+  autoReroll: boolean;
+  requiredRoleId?: string;
+  allowedRoles?: string[];
+  bannedUsers?: Array<{
+    userId: string;
+    moderator: string;
+    reason?: string;
+    bannedAt: Date;
+  }>;
+}
