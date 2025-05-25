@@ -8,6 +8,9 @@ const config: BotConfig = {
     parentCategoryId: "1288653678806569032",
     closedCategoryId: "1319852402567811102",
   },
+  autorole: {
+    communityRoleId: "1288653069093175387",
+  },
 };
 
 export default config;

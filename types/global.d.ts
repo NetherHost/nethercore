@@ -6,6 +6,9 @@ export interface BotConfig {
     parentCategoryId: string;
     closedCategoryId: string;
   };
+  autorole: {
+    communityRoleId: string;
+  };
 }
 
 export interface Ticket {
