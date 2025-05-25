@@ -2,7 +2,7 @@ import type { User, GuildMember, Client } from "discord.js";
 import type { CommandKit } from "commandkit";
 import config from "../../config";
 
-export async function run(
+export default async function (
   member: GuildMember,
   client: Client<true>,
   handler: CommandKit
