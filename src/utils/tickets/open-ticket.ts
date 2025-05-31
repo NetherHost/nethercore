@@ -45,11 +45,17 @@ class OpenTicket {
       const userData = await User.findOne({ userId: interaction.user.id });
       const ticketSettings = await TicketSettings.findOne();
 
-      if (!userData)
+      if (!userData) {
+        errorHandler.execute(
+          new Error(
+            `UserDocument for ${interaction.user.id} not found in remote database.`
+          )
+        );
         return interaction.reply({
           content: `404 Not Found: \`UserDocument for ${interaction.user.id} not found in remote database.\``,
           flags: [MessageFlags.Ephemeral],
         });
+      }
 
       switch (ticketSettings?.access) {
         case "EVERYONE":
@@ -74,6 +80,9 @@ class OpenTicket {
         default:
           const newTicketSettings = new TicketSettings();
           await newTicketSettings.save();
+          errorHandler.execute(
+            new Error(`TicketSettings document doesn't exist. Creating...`)
+          );
           return interaction.reply({
             content: `500 Internal Server Error: \`A new TicketSetttings document was created. Please press the button again.\``,
             flags: [MessageFlags.Ephemeral],

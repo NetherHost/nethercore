@@ -49,6 +49,7 @@ export async function checkUserLinked(
       return response.data;
     } catch (error: any) {
       console.log("HTTPS request failed, trying HTTP instead:", error.message);
+      errorHandler.execute(error);
 
       const httpResponse = await axios.get(
         `http://nether.host/api/discord/linked?discord_id=${discordId}`,

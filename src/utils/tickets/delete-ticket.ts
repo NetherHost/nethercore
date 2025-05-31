@@ -29,21 +29,31 @@ class DeleteTicket {
       const channel = interaction.channel as TextChannel | NewsChannel;
       const userData = await User.findOne({ userId: interaction.user.id });
 
-      if (!userData)
+      if (!userData) {
+        errorHandler.execute(
+          new Error(
+            `UserDocument for ${interaction.user.id} not found in remote database.`
+          )
+        );
         return interaction.reply({
           content: `404 Not Found: \`UserDocument for ${interaction.user.id} not found in remote database.\``,
           flags: [MessageFlags.Ephemeral],
         });
+      }
 
       const ticketData = await Tickets.findOne({
         ticketId: channel.id,
       });
 
-      if (!ticketData)
+      if (!ticketData) {
+        errorHandler.execute(
+          new Error(`TicketsDocument not found in remote database.`)
+        );
         return interaction.reply({
           content: `404 Not Found: \`TicketsDocument not found in remote database.\``,
           flags: [MessageFlags.Ephemeral],
         });
+      }
 
       if (ticketData.status === "open" || ticketData.status === "deleted")
         return interaction.reply({

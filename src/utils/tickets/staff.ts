@@ -123,17 +123,24 @@ class TicketStaff {
       });
       const channel = interaction.channel as TextChannel;
 
-      if (!ticketSettings)
+      if (!ticketSettings) {
+        errorHandler.execute(
+          new Error(`TicketSettings document not found in remote database.`)
+        );
         return interaction.reply({
           content: `500 Internal Server Error: \`A new TicketSetttings document was created. Please press the button again.\``,
           flags: [MessageFlags.Ephemeral],
         });
-
-      if (!ticket)
+      }
+      if (!ticket) {
+        errorHandler.execute(
+          new Error(`TicketsDocument not found in remote database.`)
+        );
         return interaction.reply({
           content: `404 Not Found: \`TicketsDocument not found in remote database.\``,
           flags: [MessageFlags.Ephemeral],
         });
+      }
 
       if (ticketSettings.claims.onlyOneClaimer) {
         if (ticket?.claim.status) {
@@ -224,8 +231,11 @@ class TicketStaff {
       const ticketSettings = await TicketSettings.findOne();
 
       if (!ticketSettings) {
+        errorHandler.execute(
+          new Error(`TicketSettings document not found in remote database.`)
+        );
         return interaction.reply({
-          content: "No ticket settings found. Please try again later.",
+          content: `500 Internal Server Error: \`No ticket settings found. Please try again later.\``,
           flags: [MessageFlags.Ephemeral],
         });
       }

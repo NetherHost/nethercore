@@ -36,6 +36,10 @@ process.on("uncaughtException", (error: Error) => {
   process.exit(1);
 });
 
+client.on("error", (error: Error) => {
+  errorHandler.execute(error);
+});
+
 (async () => {
   const db = new Database({ uri: process.env.MONGODB_URI! });
   await db.connect().then(() => {

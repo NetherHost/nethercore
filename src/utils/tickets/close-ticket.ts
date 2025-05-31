@@ -31,21 +31,31 @@ class CloseTicket {
       const channel = interaction.channel as TextChannel | NewsChannel;
       const userData = await User.findOne({ userId: interaction.user.id });
 
-      if (!userData)
+      if (!userData) {
+        errorHandler.execute(
+          new Error(
+            `UserDocument for ${interaction.user.id} not found in remote database.`
+          )
+        );
         return interaction.reply({
           content: `404 Not Found: \`UserDocument for ${interaction.user.id} not found in remote database.\``,
           flags: [MessageFlags.Ephemeral],
         });
+      }
 
       const ticketData = await Tickets.findOne({
         ticketId: channel.id,
       });
 
-      if (!ticketData)
+      if (!ticketData) {
+        errorHandler.execute(
+          new Error(`TicketsDocument not found in remote database.`)
+        );
         return interaction.reply({
           content: `404 Not Found: \`TicketsDocument not found in remote database.\``,
           flags: [MessageFlags.Ephemeral],
         });
+      }
 
       if (["closed", "deleted"].includes(ticketData.status)) {
         return interaction.reply({
@@ -55,11 +65,19 @@ class CloseTicket {
       }
 
       if (channel) {
-        await channel.permissionOverwrites.edit(ticketData.userId, {
-          SendMessages: false,
-          AddReactions: false,
-        });
+        try {
+          await channel.permissionOverwrites.edit(ticketData.userId, {
+            SendMessages: false,
+            AddReactions: false,
+          });
+        } catch (error: any) {
+          console.error(error);
+          errorHandler.execute(error);
+        }
       } else {
+        errorHandler.execute(
+          new Error("Channel not found or not a guild text-based channel.")
+        );
         return interaction.reply({
           content:
             "500 Internal Server Error: `Channel not found or not a guild text-based channel.`",
