@@ -8,6 +8,7 @@ import {
 import TicketSettings from "../models/TicketSettings";
 import GiveawaySettings from "../models/GiveawaySettings";
 import { errorHandler } from "../utils/error-handler";
+import cache from "../utils/cache";
 
 export const data: CommandData = {
   name: "settings",
@@ -142,13 +143,20 @@ export async function run({ interaction }: SlashCommandProps) {
 }
 
 async function handleTicketSettings(interaction: any, subcommand: string) {
-  const settings = (await TicketSettings.findOne()) || new TicketSettings();
+  const cacheKey = "ticket_settings";
+  let settings = cache.get(cacheKey);
+
+  if (!settings) {
+    settings = (await TicketSettings.findOne()) || new TicketSettings();
+    cache.set(cacheKey, settings, 300000);
+  }
 
   switch (subcommand) {
     case "access": {
       const level = interaction.options.getString("level");
       settings.access = level;
       await settings.save();
+      cache.delete(cacheKey);
 
       return interaction.reply({
         content: `Ticket access level set to \`${level}\``,
@@ -239,7 +247,7 @@ async function handleTicketSettings(interaction: any, subcommand: string) {
           .setDescription(
             banList
               .map(
-                (ban) =>
+                (ban: any) =>
                   `<@${ban.userId}> - Banned by <@${ban.moderator}> - ${
                     ban.reason || "No reason provided"
                   }`
@@ -257,7 +265,7 @@ async function handleTicketSettings(interaction: any, subcommand: string) {
         }
 
         const existingBan = settings.ticketBanList.find(
-          (ban) => ban.userId === user.id
+          (ban: any) => ban.userId === user.id
         );
         if (existingBan) {
           return interaction.reply({
@@ -288,7 +296,7 @@ async function handleTicketSettings(interaction: any, subcommand: string) {
 
         const initialLength = settings.ticketBanList.length;
         settings.ticketBanList = settings.ticketBanList.filter(
-          (ban) => ban.userId !== user.id
+          (ban: any) => ban.userId !== user.id
         );
 
         if (settings.ticketBanList.length === initialLength) {
@@ -370,7 +378,13 @@ async function handleTicketSettings(interaction: any, subcommand: string) {
 }
 
 async function handleGiveawaySettings(interaction: any, subcommand: string) {
-  const settings = (await GiveawaySettings.findOne()) || new GiveawaySettings();
+  const cacheKey = "giveaway_settings";
+  let settings = cache.get(cacheKey);
+
+  if (!settings) {
+    settings = (await GiveawaySettings.findOne()) || new GiveawaySettings();
+    cache.set(cacheKey, settings, 300000);
+  }
 
   switch (subcommand) {
     case "access": {
@@ -441,7 +455,7 @@ async function handleGiveawaySettings(interaction: any, subcommand: string) {
           .setDescription(
             banList
               .map(
-                (ban) =>
+                (ban: any) =>
                   `<@${ban.userId}> - Banned by <@${ban.moderator}> - ${
                     ban.reason || "No reason provided"
                   }`
@@ -459,7 +473,7 @@ async function handleGiveawaySettings(interaction: any, subcommand: string) {
         }
 
         const existingBan = settings.bannedUsers.find(
-          (ban) => ban.userId === user.id
+          (ban: any) => ban.userId === user.id
         );
         if (existingBan) {
           return interaction.reply({
@@ -490,7 +504,7 @@ async function handleGiveawaySettings(interaction: any, subcommand: string) {
 
         const initialLength = settings.bannedUsers.length;
         settings.bannedUsers = settings.bannedUsers.filter(
-          (ban) => ban.userId !== user.id
+          (ban: any) => ban.userId !== user.id
         );
 
         if (settings.bannedUsers.length === initialLength) {

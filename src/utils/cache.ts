@@ -1,3 +1,5 @@
+import { CacheError, CacheErrorCode } from "./errors/CacheError";
+
 class CacheManager {
   private cache: Map<any, { value: any; expiryTime: number | null }>;
 
@@ -6,6 +8,11 @@ class CacheManager {
   }
 
   set(key: any, value: any, expiry: number = 0): void {
+    if (this.cache.has(key))
+      throw new CacheError(
+        CacheErrorCode.KeyAlreadySet,
+        `Key ${key} already exists in cache.`
+      );
     const expiryTime = expiry > 0 ? Date.now() + expiry : null;
     this.cache.set(key, { value, expiryTime });
   }

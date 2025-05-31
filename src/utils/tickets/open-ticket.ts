@@ -26,6 +26,7 @@ import {
 import config from "../../config";
 import { checkUserLinked } from "../../utils/api";
 import { errorHandler } from "../error-handler";
+import cache from "../cache";
 
 interface OpenTicketProps {
   interaction: ButtonInteraction;
@@ -43,7 +44,24 @@ class OpenTicket {
       const guild = interaction.guild as Guild;
       const member = interaction.member as GuildMember;
       const userData = await User.findOne({ userId: interaction.user.id });
-      const ticketSettings = await TicketSettings.findOne();
+
+      const settingsCacheKey = "ticket_settings";
+      let settings = cache.get(settingsCacheKey);
+
+      if (!settings) {
+        settings = await TicketSettings.findOne();
+        if (settings) {
+          cache.set(settingsCacheKey, settings, 300000);
+        }
+      }
+
+      if (!settings) {
+        return interaction.reply({
+          content:
+            "500 Internal Server Error: `Ticket settings not configured.`",
+          flags: [MessageFlags.Ephemeral],
+        });
+      }
 
       if (!userData) {
         errorHandler.execute(
@@ -57,7 +75,7 @@ class OpenTicket {
         });
       }
 
-      switch (ticketSettings?.access) {
+      switch (settings?.access) {
         case "EVERYONE":
           // do nothing
           break;
@@ -89,8 +107,8 @@ class OpenTicket {
           });
       }
 
-      const ticketBanned = ticketSettings.ticketBanList?.find(
-        (ban) => ban.userId === interaction.user.id
+      const ticketBanned = settings.ticketBanList?.find(
+        (ban: any) => ban.userId === interaction.user.id
       );
 
       if (ticketBanned)
@@ -228,16 +246,16 @@ class OpenTicket {
           },
         });
 
-        if (ticketSettings && typeof ticketSettings.totalTickets === "number") {
-          ticketSettings.totalTickets++;
+        if (settings && typeof settings.totalTickets === "number") {
+          settings.totalTickets++;
         }
 
-        await ticketSettings.save();
+        await settings.save();
         await newTicket.save();
 
         let formattedTime = "Not available";
-        if (ticketSettings.stats && ticketSettings.stats.averageResponseTime) {
-          const averageMs = ticketSettings.stats.averageResponseTime;
+        if (settings.stats && settings.stats.averageResponseTime) {
+          const averageMs = settings.stats.averageResponseTime;
 
           if (averageMs < 1000) {
             formattedTime = `${Math.round(averageMs)} milliseconds`;
@@ -262,7 +280,7 @@ class OpenTicket {
             new EmbedBuilder()
               .setDescription(
                 [
-                  `### 🎫 Support Ticket #${ticketSettings.totalTickets}`,
+                  `### �� Support Ticket #${settings.totalTickets}`,
                   ``,
                   `Welcome ${interaction.user}!`,
                   ``,

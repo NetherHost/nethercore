@@ -12,6 +12,8 @@ import {
 } from "discord.js";
 import type { CommandData, SlashCommandProps } from "commandkit";
 import { errorHandler } from "../utils/error-handler";
+import cache from "../utils/cache";
+import Tickets from "../models/Tickets";
 
 export const data: CommandData = {
   name: "ticket",
@@ -110,13 +112,23 @@ export async function run({ interaction, client }: SlashCommandProps) {
       content: `Ticket panel successfully sent to ${channel}.`,
       flags: [MessageFlags.Ephemeral],
     });
-  } else if (subcommand === "add") {
+  } else if (subcommand === "add" || subcommand === "remove") {
     try {
       const user = interaction.options.getUser("user");
       const member = interaction.guild?.members.cache.get(user?.id!);
       const channel = interaction.channel as TextChannel;
 
-      if (!channel.isTextBased() || !channel.name.startsWith("ticket-"))
+      const channelId = channel.id;
+      const cacheKey = `ticket_channel_${channelId}`;
+      let isTicketChannel = cache.get(cacheKey);
+
+      if (isTicketChannel === null) {
+        const ticket = await Tickets.findOne({ ticketId: channelId });
+        isTicketChannel = !!ticket;
+        cache.set(cacheKey, isTicketChannel, 300000);
+      }
+
+      if (!channel.isTextBased() || !isTicketChannel)
         return interaction.reply({
           content:
             "400 Bad Request: `The current channel is not a ticket channel.`",
@@ -129,14 +141,24 @@ export async function run({ interaction, client }: SlashCommandProps) {
           flags: [MessageFlags.Ephemeral],
         });
 
-      await channel.permissionOverwrites.edit(member, {
-        ViewChannel: true,
-        SendMessages: true,
-        ReadMessageHistory: true,
-      });
+      if (subcommand === "add") {
+        await channel.permissionOverwrites.edit(member, {
+          ViewChannel: true,
+          SendMessages: true,
+          ReadMessageHistory: true,
+        });
+      } else if (subcommand === "remove") {
+        await channel.permissionOverwrites.edit(member, {
+          ViewChannel: false,
+          SendMessages: false,
+          ReadMessageHistory: false,
+        });
+      }
 
       await interaction.reply({
-        content: `Successfully added ${member} to the ticket.`,
+        content: `Successfully ${
+          subcommand === "add" ? "added" : "removed"
+        } ${member} from the ticket.`,
       });
     } catch (error: any) {
       console.error(error);
@@ -145,44 +167,6 @@ export async function run({ interaction, client }: SlashCommandProps) {
       return interaction.reply({
         content:
           "500 Internal Server Error: `An error occurred while adding the user to the ticket.`",
-        flags: [MessageFlags.Ephemeral],
-      });
-    }
-  } else if (subcommand === "remove") {
-    try {
-      const user = interaction.options.getUser("user");
-      const member = interaction.guild?.members.cache.get(user?.id!);
-      const channel = interaction.channel as TextChannel;
-
-      if (!channel.isTextBased() || !channel.name.startsWith("ticket-"))
-        return interaction.reply({
-          content:
-            "400 Bad Request: `The current channel is not a ticket channel.`",
-          flags: [MessageFlags.Ephemeral],
-        });
-
-      if (!member)
-        return interaction.reply({
-          content: "400 Bad Request: `The user is not in the server.`",
-          flags: [MessageFlags.Ephemeral],
-        });
-
-      await channel.permissionOverwrites.edit(member, {
-        ViewChannel: false,
-        SendMessages: false,
-        ReadMessageHistory: false,
-      });
-
-      await interaction.reply({
-        content: `Successfully removed ${member} from the ticket.`,
-      });
-    } catch (error: any) {
-      console.error(error);
-      console.error(error.stack);
-      errorHandler.execute(error);
-      return interaction.reply({
-        content:
-          "500 Internal Server Error: `An error occurred while removing the user from the ticket.`",
         flags: [MessageFlags.Ephemeral],
       });
     }

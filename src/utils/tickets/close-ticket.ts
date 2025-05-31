@@ -14,6 +14,7 @@ import TicketSettings from "../../models/TicketSettings";
 import Tickets from "../../models/Tickets";
 import User from "../../models/User";
 import { errorHandler } from "../error-handler";
+import cache from "../cache";
 
 interface CloseTicketProps {
   interaction: ButtonInteraction;
@@ -29,7 +30,16 @@ class CloseTicket {
   }: CloseTicketProps): Promise<unknown> {
     try {
       const channel = interaction.channel as TextChannel | NewsChannel;
-      const userData = await User.findOne({ userId: interaction.user.id });
+
+      const userCacheKey = `user_${interaction.user.id}`;
+      let userData = cache.get(userCacheKey);
+
+      if (!userData) {
+        userData = await User.findOne({ userId: interaction.user.id });
+        if (userData) {
+          cache.set(userCacheKey, userData, 300000);
+        }
+      }
 
       if (!userData) {
         errorHandler.execute(
@@ -43,9 +53,17 @@ class CloseTicket {
         });
       }
 
-      const ticketData = await Tickets.findOne({
-        ticketId: channel.id,
-      });
+      const ticketCacheKey = `ticket_${channel.id}`;
+      let ticketData = cache.get(ticketCacheKey);
+
+      if (!ticketData) {
+        ticketData = await Tickets.findOne({
+          ticketId: channel.id,
+        });
+        if (ticketData) {
+          cache.set(ticketCacheKey, ticketData, 300000);
+        }
+      }
 
       if (!ticketData) {
         errorHandler.execute(
@@ -94,8 +112,15 @@ class CloseTicket {
 
         ticketData.responseTime = responseTime;
 
-        const ticketSettings =
-          (await TicketSettings.findOne()) || new TicketSettings();
+        const settingsCacheKey = "ticket_settings";
+        let ticketSettings = cache.get(settingsCacheKey);
+
+        if (!ticketSettings) {
+          ticketSettings =
+            (await TicketSettings.findOne()) || new TicketSettings();
+
+          cache.set(settingsCacheKey, ticketSettings, 300000);
+        }
 
         const currentTotal =
           ticketSettings.stats.averageResponseTime *
@@ -109,11 +134,13 @@ class CloseTicket {
         ticketSettings.stats.responseTimeLastUpdated = new Date();
 
         await ticketSettings.save();
+        cache.delete(settingsCacheKey);
       }
 
       ticketData.status = "closed";
       ticketData.timestamps.closedAt = Date.now();
       await ticketData.save();
+      cache.delete(ticketCacheKey);
 
       const row = new ActionRowBuilder().addComponents(
         new ButtonBuilder()

@@ -8,6 +8,8 @@ import {
 } from "discord.js";
 import Giveaway from "../../models/Giveaway";
 import { errorHandler } from "../error-handler";
+import cache from "../cache";
+import User from "../../models/User";
 
 interface ParticipationResult {
   success: boolean;
@@ -26,8 +28,25 @@ class Participate {
     durationTimestamp: string
   ): Promise<ParticipationResult> {
     try {
-      const giveaway = await Giveaway.findOne({ id: giveawayId });
-      const member = interaction.member as GuildMember;
+      const userCacheKey = `user_${userId}`;
+      let userData = cache.get(userCacheKey);
+
+      if (!userData) {
+        userData = await User.findOne({ userId });
+        if (userData) {
+          cache.set(userCacheKey, userData, 300000);
+        }
+      }
+
+      const giveawayCacheKey = `giveaway_${giveawayId}`;
+      let giveaway = cache.get(giveawayCacheKey);
+
+      if (!giveaway) {
+        giveaway = await Giveaway.findOne({ id: giveawayId });
+        if (giveaway) {
+          cache.set(giveawayCacheKey, giveaway, 120000);
+        }
+      }
 
       if (!giveaway) {
         console.error("Giveaway not found in the database.");
@@ -43,6 +62,7 @@ class Participate {
         return { success: false, error: "That giveaway has already ended." };
       }
 
+      const member = interaction.member as GuildMember;
       const userRoles = member.roles
         ? member.roles.cache.map((role) => role.id)
         : [];
@@ -69,7 +89,7 @@ class Participate {
 
       if (giveaway.participants.includes(userId)) {
         giveaway.participants = giveaway.participants.filter(
-          (id) => id !== userId
+          (id: string) => id !== userId
         );
         console.log(`User ${userId} removed from participation.`);
       } else {
@@ -136,6 +156,9 @@ class Participate {
         ],
         components: [updatedRow],
       });
+
+      // After updating giveaway data, invalidate cache
+      cache.delete(giveawayCacheKey);
 
       return {
         success: true,

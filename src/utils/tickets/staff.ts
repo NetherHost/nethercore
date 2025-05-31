@@ -15,6 +15,7 @@ import Ticket from "./index";
 import TicketSettings from "../../models/TicketSettings";
 import config from "../../config";
 import { errorHandler } from "../error-handler";
+import cache from "../cache";
 
 interface TicketStaffProps {
   interaction: ButtonInteraction;
@@ -117,7 +118,7 @@ class TicketStaff {
 
   public async claimTicket({ interaction, client }: TicketStaffProps) {
     try {
-      const ticketSettings = await TicketSettings.findOne();
+      const ticketSettings = await getTicketSettings();
       const ticket = await Tickets.findOne({
         ticketId: interaction.channel?.id,
       });
@@ -228,7 +229,7 @@ class TicketStaff {
 
   public async getResponseTimeStats({ interaction, client }: TicketStaffProps) {
     try {
-      const ticketSettings = await TicketSettings.findOne();
+      const ticketSettings = await getTicketSettings();
 
       if (!ticketSettings) {
         errorHandler.execute(
@@ -302,6 +303,37 @@ class TicketStaff {
       errorHandler.execute(error);
     }
   }
+}
+
+async function getActiveTickets() {
+  try {
+    const cacheKey = "active_tickets";
+    let tickets = cache.get(cacheKey);
+
+    if (!tickets) {
+      tickets = await Tickets.find({ status: "open" });
+      cache.set(cacheKey, tickets, 60000);
+    }
+
+    return tickets;
+  } catch (error: any) {
+    errorHandler.execute(error);
+    return [];
+  }
+}
+
+async function getTicketSettings() {
+  const cacheKey = "ticket_settings";
+  let settings = cache.get(cacheKey);
+
+  if (!settings) {
+    settings = await TicketSettings.findOne();
+    if (settings) {
+      cache.set(cacheKey, settings, 300000);
+    }
+  }
+
+  return settings;
 }
 
 export default TicketStaff;

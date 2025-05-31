@@ -1,6 +1,7 @@
 import Giveaway from "../../models/Giveaway";
 import { GiveawayDocument } from "../../models/Giveaway";
 import { errorHandler } from "../error-handler";
+import cache from "../cache";
 
 interface GiveawayFilterOptions {
   active?: boolean;
@@ -33,7 +34,15 @@ class ListGiveaways {
         giveawaysQuery = giveawaysQuery.limit(options.limit);
       }
 
-      const giveaways = await giveawaysQuery.exec();
+      const cacheKey = `giveaway_list_${options.active}_${options.limit}`;
+      let giveaways = cache.get(cacheKey);
+
+      if (!giveaways) {
+        giveaways = await giveawaysQuery.exec();
+
+        cache.set(cacheKey, giveaways, 60000);
+      }
+
       return giveaways;
     } catch (error: any) {
       console.error(error);

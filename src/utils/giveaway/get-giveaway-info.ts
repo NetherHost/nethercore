@@ -1,13 +1,22 @@
 import Giveaway from "../../models/Giveaway";
 import { GiveawayDocument } from "../../models/Giveaway";
 import { errorHandler } from "../error-handler";
+import cache from "../cache";
 
 class GetGiveawayInfo {
   constructor() {}
 
   public async execute(giveawayId: number): Promise<GiveawayDocument | null> {
     try {
-      const giveaway = await Giveaway.findOne({ id: giveawayId });
+      const cacheKey = `giveaway_${giveawayId}`;
+      let giveaway = cache.get(cacheKey);
+
+      if (!giveaway) {
+        giveaway = await Giveaway.findOne({ id: giveawayId });
+        if (giveaway) {
+          cache.set(cacheKey, giveaway, 120000);
+        }
+      }
 
       if (!giveaway) {
         console.log(`Giveaway ${giveawayId} not found.`);
@@ -45,6 +54,18 @@ class GetGiveawayInfo {
       errorHandler.execute(error);
       return null;
     }
+  }
+
+  async active() {
+    const cacheKey = "active_giveaways";
+    let activeGiveaways = cache.get(cacheKey);
+
+    if (!activeGiveaways) {
+      activeGiveaways = await Giveaway.find({ isActive: true });
+      cache.set(cacheKey, activeGiveaways, 120000);
+    }
+
+    return activeGiveaways;
   }
 }
 

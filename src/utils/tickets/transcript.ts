@@ -12,6 +12,7 @@ import {
 import fs from "fs";
 import path from "path";
 import { errorHandler } from "../error-handler";
+import cache from "../cache";
 
 class TicketTranscripts {
   constructor() {}
@@ -21,65 +22,82 @@ class TicketTranscripts {
   }: {
     channel: TextChannel;
   }): Promise<Message<true>[]> {
-    const messages: Message<true>[] = [];
-    let lastMessageId: string | undefined;
+    const cacheKey = `transcript_messages_${channel.id}`;
+    let messages = cache.get(cacheKey);
 
-    while (true) {
-      const fetched = await channel.messages.fetch({
-        limit: 100,
-        before: lastMessageId,
-      });
+    if (!messages) {
+      messages = [];
+      let lastMessageId: string | undefined;
 
-      if (fetched.size === 0) break;
+      while (true) {
+        const fetched = await channel.messages.fetch({
+          limit: 100,
+          before: lastMessageId,
+        });
 
-      messages.push(...fetched.values());
-      lastMessageId = fetched.last()?.id;
-      if (!lastMessageId) break;
+        if (fetched.size === 0) break;
+
+        messages.push(...fetched.values());
+        lastMessageId = fetched.last()?.id;
+        if (!lastMessageId) break;
+      }
+
+      cache.set(cacheKey, messages, 300000);
     }
 
     return messages;
   }
 
   public formatMessages(messages: Message<true>[]): string {
-    let lastDate = "";
+    const messagesString = JSON.stringify(messages.map((m) => m.id));
+    const cacheKey = `formatted_messages_${messagesString.substring(0, 100)}`;
+    let formattedContent = cache.get(cacheKey);
 
-    return messages
-      .slice()
-      .reverse()
-      .reduce((log, msg) => {
-        if (msg.author.bot) return log;
+    if (!formattedContent) {
+      let lastDate = "";
 
-        const createdAt = new Date(msg.createdAt);
+      formattedContent = messages
+        .slice()
+        .reverse()
+        .reduce((log, msg) => {
+          if (msg.author.bot) return log;
 
-        const currentDate = createdAt.toLocaleDateString("en-US", {
-          timeZone: "America/New_York",
-          month: "2-digit",
-          day: "2-digit",
-          year: "numeric",
-        });
+          const createdAt = new Date(msg.createdAt);
 
-        if (currentDate !== lastDate) {
-          log += `\n=== ${currentDate} ===\n`;
-          lastDate = currentDate;
-        }
+          const currentDate = createdAt.toLocaleDateString("en-US", {
+            timeZone: "America/New_York",
+            month: "2-digit",
+            day: "2-digit",
+            year: "numeric",
+          });
 
-        const time = createdAt.toLocaleTimeString("en-US", {
-          timeZone: "America/New_York",
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: true,
-        });
+          if (currentDate !== lastDate) {
+            log += `\n=== ${currentDate} ===\n`;
+            lastDate = currentDate;
+          }
 
-        const attachments = [...msg.attachments.values()]
-          .map((a) => a.url)
-          .join("\n");
+          const time = createdAt.toLocaleTimeString("en-US", {
+            timeZone: "America/New_York",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          });
 
-        log += `[${time}] ${msg.author.username}: ${msg.content}\n${
-          attachments ? `${attachments}\n` : ""
-        }`;
+          const attachments = [...msg.attachments.values()]
+            .map((a) => a.url)
+            .join("\n");
 
-        return log;
-      }, "");
+          log += `[${time}] ${msg.author.username}: ${msg.content}\n${
+            attachments ? `${attachments}\n` : ""
+          }`;
+
+          return log;
+        }, "");
+
+      cache.set(cacheKey, formattedContent, 300000);
+    }
+
+    return formattedContent;
   }
 
   public async saveTranscript({
@@ -90,11 +108,18 @@ class TicketTranscripts {
     channel: TextChannel;
   }): Promise<string | null> {
     try {
-      const dir = path.resolve("./data/transcripts");
-      await fs.promises.mkdir(dir, { recursive: true });
+      const cacheKey = `saved_transcript_${channel.id}`;
+      let filePath = cache.get(cacheKey);
 
-      const filePath = path.join(dir, `${channel.name}-${channel.id}.txt`);
-      await fs.promises.writeFile(filePath, content);
+      if (!filePath) {
+        const dir = path.resolve("./data/transcripts");
+        await fs.promises.mkdir(dir, { recursive: true });
+
+        filePath = path.join(dir, `${channel.name}-${channel.id}.txt`);
+        await fs.promises.writeFile(filePath, content);
+
+        cache.set(cacheKey, filePath, 300000);
+      }
 
       return filePath;
     } catch (error: any) {

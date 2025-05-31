@@ -3,6 +3,7 @@ import { CommandKit } from "commandkit";
 import Tickets from "../../models/Tickets";
 import TicketSettings from "../../models/TicketSettings";
 import config from "../../config";
+import cache from "../../utils/cache";
 
 export default async function (
   message: Message,
@@ -11,7 +12,17 @@ export default async function (
 ) {
   if (message.author.bot || !message.guild || !message.channel) return;
 
-  const ticket = await Tickets.findOne({ ticketId: message.channel.id });
+  const channelId = message.channel.id;
+  const ticketCacheKey = `ticket_${channelId}`;
+  let ticket = cache.get(ticketCacheKey);
+
+  if (!ticket) {
+    ticket = await Tickets.findOne({ ticketId: channelId });
+    if (ticket) {
+      cache.set(ticketCacheKey, ticket, 300000);
+    }
+  }
+
   if (!ticket) return;
 
   const member = await message.guild.members
@@ -34,9 +45,15 @@ export default async function (
     ticket.responseTime = responseTime;
 
     await ticket.save();
+    cache.delete(ticketCacheKey);
 
-    const ticketSettings =
-      (await TicketSettings.findOne()) || new TicketSettings();
+    const settingsCacheKey = "ticket_settings";
+    let ticketSettings = cache.get(settingsCacheKey);
+
+    if (!ticketSettings) {
+      ticketSettings = (await TicketSettings.findOne()) || new TicketSettings();
+      cache.set(settingsCacheKey, ticketSettings, 300000);
+    }
 
     const currentTotal =
       ticketSettings.stats.averageResponseTime *
@@ -50,5 +67,6 @@ export default async function (
     ticketSettings.stats.responseTimeLastUpdated = new Date();
 
     await ticketSettings.save();
+    cache.delete(settingsCacheKey);
   }
 }

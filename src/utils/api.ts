@@ -2,6 +2,7 @@ import axios from "axios";
 import dotenv from "dotenv";
 import https from "https";
 import { errorHandler } from "./error-handler";
+import cache from "./cache";
 
 dotenv.config();
 
@@ -20,6 +21,12 @@ export async function checkUserLinked(
   discordId: string
 ): Promise<LinkedUserResponse> {
   try {
+    const cacheKey = `linked_user_${discordId}`;
+    const cachedData = cache.get(cacheKey);
+    if (cachedData) {
+      return cachedData as LinkedUserResponse;
+    }
+
     const API_KEY = process.env.NETHER_API_KEY;
 
     if (!API_KEY) {
@@ -46,6 +53,7 @@ export async function checkUserLinked(
         }
       );
 
+      cache.set(cacheKey, response.data, 600000);
       return response.data;
     } catch (error: any) {
       console.log("HTTPS request failed, trying HTTP instead:", error.message);
@@ -59,6 +67,8 @@ export async function checkUserLinked(
           },
         }
       );
+
+      cache.set(cacheKey, httpResponse.data, 600000);
       return httpResponse.data;
     }
   } catch (error: any) {

@@ -11,6 +11,7 @@ import TicketSettings from "../../models/TicketSettings";
 import Tickets from "../../models/Tickets";
 import User from "../../models/User";
 import { errorHandler } from "../error-handler";
+import cache from "../cache";
 
 interface DeleteTicketProps {
   interaction: ButtonInteraction;
@@ -27,7 +28,16 @@ class DeleteTicket {
     try {
       const member = interaction.member as GuildMember;
       const channel = interaction.channel as TextChannel | NewsChannel;
-      const userData = await User.findOne({ userId: interaction.user.id });
+
+      const userCacheKey = `user_${interaction.user.id}`;
+      let userData = cache.get(userCacheKey);
+
+      if (!userData) {
+        userData = await User.findOne({ userId: interaction.user.id });
+        if (userData) {
+          cache.set(userCacheKey, userData, 300000);
+        }
+      }
 
       if (!userData) {
         errorHandler.execute(
@@ -41,9 +51,17 @@ class DeleteTicket {
         });
       }
 
-      const ticketData = await Tickets.findOne({
-        ticketId: channel.id,
-      });
+      const ticketCacheKey = `ticket_${channel.id}`;
+      let ticketData = cache.get(ticketCacheKey);
+
+      if (!ticketData) {
+        ticketData = await Tickets.findOne({
+          ticketId: channel.id,
+        });
+        if (ticketData) {
+          cache.set(ticketCacheKey, ticketData, 300000);
+        }
+      }
 
       if (!ticketData) {
         errorHandler.execute(
@@ -84,8 +102,14 @@ class DeleteTicket {
 
         ticketData.responseTime = responseTime;
 
-        const ticketSettings =
-          (await TicketSettings.findOne()) || new TicketSettings();
+        const settingsCacheKey = "ticket_settings";
+        let ticketSettings = cache.get(settingsCacheKey);
+
+        if (!ticketSettings) {
+          ticketSettings =
+            (await TicketSettings.findOne()) || new TicketSettings();
+          cache.set(settingsCacheKey, ticketSettings, 300000);
+        }
 
         const currentTotal =
           ticketSettings.stats.averageResponseTime *
@@ -99,16 +123,26 @@ class DeleteTicket {
         ticketSettings.stats.responseTimeLastUpdated = new Date();
 
         await ticketSettings.save();
+        cache.delete(settingsCacheKey);
       }
 
       ticketData.status = "deleted";
       ticketData.timestamps.deletedAt = Date.now();
       await ticketData.save();
+      cache.delete(ticketCacheKey);
 
-      const ticketSettings =
-        (await TicketSettings.findOne()) || new TicketSettings();
+      const settingsCacheKey = "ticket_settings";
+      let ticketSettings = cache.get(settingsCacheKey);
+
+      if (!ticketSettings) {
+        ticketSettings =
+          (await TicketSettings.findOne()) || new TicketSettings();
+        cache.set(settingsCacheKey, ticketSettings, 300000);
+      }
+
       ticketSettings.stats.totalResolved += 1;
       await ticketSettings.save();
+      cache.delete(settingsCacheKey);
 
       await channel.delete();
     } catch (error: any) {
