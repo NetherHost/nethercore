@@ -79,6 +79,9 @@ class EndGiveaway {
               ? `Congratulations ${winnerMentions}! You won: **${giveaway.prize}**`
               : "No winners for this giveaway.",
           embeds: [embed],
+          allowedMentions: {
+            parse: ["users"],
+          },
         });
 
         try {

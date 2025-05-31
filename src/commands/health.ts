@@ -11,6 +11,7 @@ import type { CommandData, SlashCommandProps } from "commandkit";
 import os from "node:os";
 import { version } from "../../package.json";
 import { execSync } from "child_process";
+import { errorHandler } from "../utils/error-handler";
 const commit = execSync("git rev-parse --short HEAD").toString().trim();
 
 export const data: CommandData = {

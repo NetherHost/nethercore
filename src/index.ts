@@ -2,6 +2,7 @@ import "dotenv/config";
 import { CommandKit } from "commandkit";
 import { Client, GatewayIntentBits, MessageFlags } from "discord.js";
 import Database from "./utils/database";
+import { errorHandler } from "./utils/error-handler";
 
 const client = new Client({
   intents: [
@@ -23,6 +24,16 @@ new CommandKit({
   bulkRegister: true,
   commandsPath: `${__dirname}/commands`,
   eventsPath: `${__dirname}/events`,
+});
+
+process.on("unhandledRejection", (error: Error) => {
+  errorHandler.execute(error);
+  process.exit(1);
+});
+
+process.on("uncaughtException", (error: Error) => {
+  errorHandler.execute(error);
+  process.exit(1);
 });
 
 (async () => {

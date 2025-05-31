@@ -8,6 +8,7 @@ import {
   DMChannel,
   MessageFlags,
 } from "discord.js";
+import { errorHandler } from "../utils/error-handler";
 
 export const data: CommandData = {
   name: "say",
@@ -59,8 +60,9 @@ export async function run({ interaction }: SlashCommandProps) {
       content: `${message}`,
       flags: [],
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error(`Error in /say command: ${error}`);
+    errorHandler.execute(error);
     return interaction.reply({
       content:
         "500 Internal Server Error: `An unexpected error occurred while executing this command.`",

@@ -11,6 +11,7 @@ import {
   MessageFlags,
 } from "discord.js";
 import type { CommandData, SlashCommandProps } from "commandkit";
+import { errorHandler } from "../utils/error-handler";
 
 export const data: CommandData = {
   name: "ticket",
@@ -140,6 +141,7 @@ export async function run({ interaction, client }: SlashCommandProps) {
     } catch (error: any) {
       console.error(error);
       console.error(error.stack);
+      errorHandler.execute(error);
       return interaction.reply({
         content:
           "500 Internal Server Error: `An error occurred while adding the user to the ticket.`",
@@ -177,6 +179,7 @@ export async function run({ interaction, client }: SlashCommandProps) {
     } catch (error: any) {
       console.error(error);
       console.error(error.stack);
+      errorHandler.execute(error);
       return interaction.reply({
         content:
           "500 Internal Server Error: `An error occurred while removing the user from the ticket.`",

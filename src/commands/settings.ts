@@ -7,6 +7,7 @@ import {
 } from "discord.js";
 import TicketSettings from "../models/TicketSettings";
 import GiveawaySettings from "../models/GiveawaySettings";
+import { errorHandler } from "../utils/error-handler";
 
 export const data: CommandData = {
   name: "settings",
@@ -130,8 +131,9 @@ export async function run({ interaction }: SlashCommandProps) {
     } else if (subcommandGroup === "giveaway") {
       await handleGiveawaySettings(interaction, subcommand);
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
+    errorHandler.execute(error);
     interaction.reply({
       content: `500 Internal Server Error: \`An error occurred while running the command.\``,
       flags: [MessageFlags.Ephemeral],

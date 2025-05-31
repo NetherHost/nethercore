@@ -1,5 +1,6 @@
 import Giveaway from "../../models/Giveaway";
 import { GiveawayDocument } from "../../models/Giveaway";
+import { errorHandler } from "../error-handler";
 
 class GetGiveawayInfo {
   constructor() {}
@@ -10,6 +11,7 @@ class GetGiveawayInfo {
 
       if (!giveaway) {
         console.log(`Giveaway ${giveawayId} not found.`);
+        errorHandler.execute(new Error(`Giveaway ${giveawayId} not found.`));
         return null;
       }
 
@@ -17,6 +19,7 @@ class GetGiveawayInfo {
     } catch (error: any) {
       console.error(error);
       console.error(error.stack);
+      errorHandler.execute(error);
       return null;
     }
   }
@@ -29,6 +32,9 @@ class GetGiveawayInfo {
 
       if (!giveaway) {
         console.log(`Giveaway with message ID ${messageId} not found.`);
+        errorHandler.execute(
+          new Error(`Giveaway with message ID ${messageId} not found.`)
+        );
         return null;
       }
 
@@ -36,6 +42,7 @@ class GetGiveawayInfo {
     } catch (error: any) {
       console.error(error);
       console.error(error.stack);
+      errorHandler.execute(error);
       return null;
     }
   }

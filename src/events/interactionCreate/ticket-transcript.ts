@@ -9,6 +9,7 @@ import {
 } from "discord.js";
 import type { CommandKit } from "commandkit";
 import Ticket from "../../utils/tickets";
+import { errorHandler } from "../../utils/error-handler";
 
 export default async function (
   interaction: Interaction<CacheType>,
@@ -53,6 +54,7 @@ export default async function (
     });
   } catch (error: any) {
     console.error("Transcript handling failed:", error);
+    errorHandler.execute(error);
     await interaction.editReply({
       content:
         "500 Server Error: `An unexpected error occurred while saving the transcript.`",

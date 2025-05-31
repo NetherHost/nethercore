@@ -9,10 +9,11 @@ import {
   NewsChannel,
   TextChannel,
 } from "discord.js";
+import config from "../../config";
+import TicketSettings from "../../models/TicketSettings";
 import Tickets from "../../models/Tickets";
 import User from "../../models/User";
-import TicketSettings from "../../models/TicketSettings";
-import config from "../../config";
+import { errorHandler } from "../error-handler";
 
 interface CloseTicketProps {
   interaction: ButtonInteraction;
@@ -146,6 +147,7 @@ class CloseTicket {
     } catch (error: any) {
       console.error(error);
       console.error(error.stack);
+      errorHandler.execute(error);
     }
   }
 }

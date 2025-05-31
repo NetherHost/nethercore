@@ -5,6 +5,7 @@ import {
   Collection,
   GuildMember,
 } from "discord.js";
+import { errorHandler } from "./error-handler";
 
 export async function registerUser(user: DiscordUser) {
   try {
@@ -26,6 +27,7 @@ export async function registerUser(user: DiscordUser) {
   } catch (error: any) {
     console.error(error);
     console.error(error.stack);
+    errorHandler.execute(error);
   }
 }
 
@@ -101,5 +103,6 @@ export async function bulkRegisterUsers(client: Client, guildId: string) {
   } catch (error: any) {
     console.error("Error during bulk registration:", error);
     console.error(error.stack);
+    errorHandler.execute(error);
   }
 }

@@ -1,5 +1,6 @@
 import { ButtonInteraction, Client } from "discord.js";
 import { CommandKit } from "commandkit";
+import { errorHandler } from "../../utils/error-handler";
 import Giveaway from "../../utils/giveaway";
 
 export default async function (
@@ -62,6 +63,7 @@ export default async function (
   } catch (error: any) {
     console.error(error);
     console.error(error.stack);
+    errorHandler.execute(error);
     await interaction.editReply({
       content: `500 Internal Server Error: \`An error occurred while processing your request.\``,
     });

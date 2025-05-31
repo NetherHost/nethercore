@@ -6,10 +6,11 @@ import {
   TextChannel,
   NewsChannel,
 } from "discord.js";
-import Tickets from "../../models/Tickets";
-import TicketSettings from "../../models/TicketSettings";
-import User from "../../models/User";
 import config from "../../config";
+import TicketSettings from "../../models/TicketSettings";
+import Tickets from "../../models/Tickets";
+import User from "../../models/User";
+import { errorHandler } from "../error-handler";
 
 interface DeleteTicketProps {
   interaction: ButtonInteraction;
@@ -103,6 +104,7 @@ class DeleteTicket {
     } catch (error: any) {
       console.error(error);
       console.error(error.stack);
+      errorHandler.execute(error);
     }
   }
 }

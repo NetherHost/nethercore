@@ -1,5 +1,6 @@
 import Giveaway from "../../models/Giveaway";
 import { GiveawayDocument } from "../../models/Giveaway";
+import { errorHandler } from "../error-handler";
 
 interface GiveawayFilterOptions {
   active?: boolean;
@@ -37,6 +38,7 @@ class ListGiveaways {
     } catch (error: any) {
       console.error(error);
       console.error(error.stack);
+      errorHandler.execute(error);
       return [];
     }
   }

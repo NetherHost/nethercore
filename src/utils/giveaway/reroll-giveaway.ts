@@ -1,6 +1,6 @@
-// Copyright 2025 Nether Host
 import { Client, TextChannel } from "discord.js";
 import Giveaway from "../../models/Giveaway";
+import { errorHandler } from "../error-handler";
 
 class RerollGiveaway {
   constructor() {}
@@ -39,6 +39,7 @@ class RerollGiveaway {
       const giveaway = await Giveaway.findOne({ id: giveawayId });
 
       if (!giveaway) {
+        errorHandler.execute(new Error(`Giveaway ${giveawayId} not found.`));
         return {
           success: false,
           newWinners: null,
@@ -47,6 +48,9 @@ class RerollGiveaway {
       }
 
       if (!giveaway.ended) {
+        errorHandler.execute(
+          new Error(`Cannot reroll an active giveaway: ${giveawayId}`)
+        );
         return {
           success: false,
           newWinners: null,
@@ -55,6 +59,11 @@ class RerollGiveaway {
       }
 
       if (giveaway.participants.length <= giveaway.winners.length) {
+        errorHandler.execute(
+          new Error(
+            `No more eligible participants to select as winners: ${giveawayId}`
+          )
+        );
         return {
           success: false,
           newWinners: null,
@@ -70,6 +79,9 @@ class RerollGiveaway {
       );
 
       if (newWinners.length === 0) {
+        errorHandler.execute(
+          new Error(`No eligible participants for reroll: ${giveawayId}`)
+        );
         return {
           success: false,
           newWinners: null,
@@ -94,12 +106,16 @@ class RerollGiveaway {
         }
       } catch (error) {
         console.error("Error sending reroll notification:", error);
+        errorHandler.execute(
+          new Error(`Error sending reroll notification: ${giveawayId}`)
+        );
       }
 
       return { success: true, newWinners };
     } catch (error: any) {
       console.error(error);
       console.error(error.stack);
+      errorHandler.execute(error);
       return {
         success: false,
         newWinners: null,

@@ -7,6 +7,7 @@ import {
   GuildMember,
 } from "discord.js";
 import Giveaway from "../../models/Giveaway";
+import { errorHandler } from "../error-handler";
 
 interface ParticipationResult {
   success: boolean;
@@ -30,11 +31,15 @@ class Participate {
 
       if (!giveaway) {
         console.error("Giveaway not found in the database.");
+        errorHandler.execute(new Error(`Giveaway ${giveawayId} not found.`));
         return { success: false, error: "That giveaway does not exist." };
       }
 
       if (giveaway.ended) {
         console.log(`Giveaway ${giveawayId} already ended.`);
+        errorHandler.execute(
+          new Error(`Giveaway ${giveawayId} already ended.`)
+        );
         return { success: false, error: "That giveaway has already ended." };
       }
 
@@ -50,7 +55,11 @@ class Participate {
         console.log(
           `User ${userId} does not have the required role: ${giveaway.requiredRole}.`
         );
-
+        errorHandler.execute(
+          new Error(
+            `User ${userId} does not have the required role: ${giveaway.requiredRole}.`
+          )
+        );
         return {
           success: false,
           error:
@@ -75,10 +84,12 @@ class Participate {
         giveawayMessage = await interaction.channel?.messages.fetch(messageId);
         if (!giveawayMessage) {
           console.error("Unable to fetch giveaway message.");
+          errorHandler.execute(new Error("Unable to fetch giveaway message."));
           return { success: false, error: "Unable to fetch giveaway message." };
         }
       } catch (error) {
         console.error("Unable to fetch giveaway message.");
+        errorHandler.execute(new Error("Unable to fetch giveaway message."));
         return { success: false, error: "Unable to fetch giveaway message." };
       }
 
@@ -133,6 +144,7 @@ class Participate {
     } catch (error: any) {
       console.error(error);
       console.error(error.stack);
+      errorHandler.execute(error);
       return {
         success: false,
         error: "An error occurred processing your request.",

@@ -11,6 +11,7 @@ import {
 } from "discord.js";
 import fs from "fs";
 import path from "path";
+import { errorHandler } from "../error-handler";
 
 class TicketTranscripts {
   constructor() {}
@@ -98,6 +99,7 @@ class TicketTranscripts {
       return filePath;
     } catch (error: any) {
       console.error("Failed to save transcript:", error);
+      errorHandler.execute(error);
       return null;
     }
   }
@@ -135,6 +137,7 @@ class TicketTranscripts {
     } catch (error: any) {
       console.error(error);
       console.error(error.stack);
+      errorHandler.execute(error);
       return false;
     }
   }

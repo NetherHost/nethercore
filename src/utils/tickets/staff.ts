@@ -14,6 +14,7 @@ import Tickets from "../../models/Tickets";
 import Ticket from "./index";
 import TicketSettings from "../../models/TicketSettings";
 import config from "../../config";
+import { errorHandler } from "../error-handler";
 
 interface TicketStaffProps {
   interaction: ButtonInteraction;
@@ -110,6 +111,7 @@ class TicketStaff {
     } catch (error: any) {
       console.error(error);
       console.error(error.stack);
+      errorHandler.execute(error);
     }
   }
 
@@ -185,6 +187,7 @@ class TicketStaff {
     } catch (error: any) {
       console.error(error);
       console.error(error.stack);
+      errorHandler.execute(error);
     }
   }
 
@@ -212,6 +215,7 @@ class TicketStaff {
     } catch (error: any) {
       console.error(error);
       console.error(error.stack);
+      errorHandler.execute(error);
     }
   }
 
@@ -285,12 +289,7 @@ class TicketStaff {
     } catch (error: any) {
       console.error(error);
       console.error(error.stack);
-
-      await interaction.reply({
-        content:
-          "500 Server Error: `Error retrieving response time statistics.`",
-        flags: [MessageFlags.Ephemeral],
-      });
+      errorHandler.execute(error);
     }
   }
 }

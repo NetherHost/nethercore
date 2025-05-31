@@ -25,6 +25,7 @@ import {
 } from "../../../types/global";
 import config from "../../config";
 import { checkUserLinked } from "../../utils/api";
+import { errorHandler } from "../error-handler";
 
 interface OpenTicketProps {
   interaction: ButtonInteraction;
@@ -325,6 +326,7 @@ class OpenTicket {
     } catch (error: any) {
       console.error(error);
       console.error(error.stack);
+      errorHandler.execute(error);
     }
   }
 
@@ -397,11 +399,7 @@ class OpenTicket {
     } catch (error: any) {
       console.error(error);
       console.error(error.stack);
-
-      return interaction.reply({
-        content: `500 Internal Server Error: \`An error occurred while reopening the ticket.\``,
-        flags: [MessageFlags.Ephemeral],
-      });
+      errorHandler.execute(error);
     }
   }
 }

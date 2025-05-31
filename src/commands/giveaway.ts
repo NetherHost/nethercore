@@ -8,6 +8,7 @@ import {
 } from "discord.js";
 import type { CommandData, SlashCommandProps } from "commandkit";
 import Giveaway from "../utils/giveaway";
+import { errorHandler } from "../utils/error-handler";
 
 export const data: CommandData = {
   name: "giveaway",
@@ -248,6 +249,7 @@ async function handleCreateGiveaway(
   } catch (error: any) {
     console.error(error);
     console.error(error.stack);
+    errorHandler.execute(error);
     await interaction.editReply({
       content: `500 Internal Server Error: \`An error occurred while creating the giveaway.\``,
     });
@@ -292,6 +294,7 @@ async function handleEndGiveaway(
   } catch (error: any) {
     console.error(error);
     console.error(error.stack);
+    errorHandler.execute(error);
     await interaction.editReply({
       content: `500 Internal Server Error: \`An error occurred while ending the giveaway.\``,
     });
@@ -332,6 +335,7 @@ async function handleRerollGiveaway(
   } catch (error: any) {
     console.error(error);
     console.error(error.stack);
+    errorHandler.execute(error);
     await interaction.editReply({
       content: `500 Internal Server Error: \`An error occurred while rerolling the giveaway.\``,
     });
@@ -389,6 +393,7 @@ async function handleListGiveaways(
   } catch (error: any) {
     console.error(error);
     console.error(error.stack);
+    errorHandler.execute(error);
     await interaction.editReply({
       content: `500 Internal Server Error: \`An error occurred while listing giveaways.\``,
     });

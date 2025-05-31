@@ -1,5 +1,6 @@
 import { Client } from "discord.js";
 import Giveaway from "../../models/Giveaway";
+import { errorHandler } from "../error-handler";
 import EndGiveaway from "./end-giveaway";
 
 class CheckGiveaway {
@@ -43,6 +44,9 @@ class CheckGiveaway {
           console.error(
             `Failed to end giveaway #${giveaway.id}: ${result.error}`
           );
+          errorHandler.execute(
+            new Error(`Failed to end giveaway #${giveaway.id}: ${result.error}`)
+          );
         }
       }
 
@@ -50,6 +54,7 @@ class CheckGiveaway {
     } catch (error: any) {
       console.error("Error checking giveaways:", error);
       console.error(error.stack);
+      errorHandler.execute(error);
       return 0;
     }
   }
@@ -84,6 +89,7 @@ class CheckGiveaway {
     } catch (error: any) {
       console.error(`Error checking giveaway #${giveawayId}:`, error);
       console.error(error.stack);
+      errorHandler.execute(error);
       return false;
     }
   }

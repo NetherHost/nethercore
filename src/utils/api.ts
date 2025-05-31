@@ -1,6 +1,7 @@
 import axios from "axios";
 import dotenv from "dotenv";
 import https from "https";
+import { errorHandler } from "./error-handler";
 
 dotenv.config();
 
@@ -61,6 +62,7 @@ export async function checkUserLinked(
     }
   } catch (error: any) {
     console.error("Error checking if user is linked:", error.message);
+    errorHandler.execute(error);
 
     if (error.response) {
       if (error.response.status === 401) {
