@@ -13,7 +13,7 @@ export default function (
   console.log(`${client.user.username} is online!`);
   cache.set("ready", true);
 
-  client.user.setActivity("netherhost.cc", { type: ActivityType.Watching });
+  client.user.setActivity("nether.host", { type: ActivityType.Watching });
 
   setInterval(() => {
     cache.cleanUp();
