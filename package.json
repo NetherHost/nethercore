@@ -1,6 +1,6 @@
 {
   "name": "nethercore",
-  "version": "2.5.1-beta.2",
+  "version": "2.5.1-beta.3",
   "description": "A Discord bot built with TypeScript",
   "type": "module",
   "main": "dist/index.js",
