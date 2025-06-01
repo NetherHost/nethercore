@@ -20,7 +20,7 @@
   "license": "ISC",
   "packageManager": "pnpm@10.11.0",
   "devDependencies": {
-    "@types/node": "^22.15.21",
+    "@types/node": "^22.15.29",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   },
@@ -30,6 +30,6 @@
     "commandkit": "^0.1.10",
     "discord.js": "^14.19.3",
     "dotenv": "^16.5.0",
-    "mongoose": "^8.15.0"
+    "mongoose": "^8.15.1"
   }
 }
