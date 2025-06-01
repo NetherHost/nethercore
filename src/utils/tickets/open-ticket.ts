@@ -280,7 +280,7 @@ class OpenTicket {
             new EmbedBuilder()
               .setDescription(
                 [
-                  `### �� Support Ticket #${settings.totalTickets}`,
+                  `### 🎫 Support Ticket #${settings.totalTickets}`,
                   ``,
                   `Welcome ${interaction.user}!`,
                   ``,
