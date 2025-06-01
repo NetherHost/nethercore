@@ -1,7 +1,7 @@
 {
   "name": "nethercore",
-  "version": "2.5.1-beta.3",
-  "description": "A Discord bot built with TypeScript",
+  "version": "2.5.1-beta.4",
+  "description": "An advanced bot built for managing all things Nether Host.",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
@@ -14,10 +14,12 @@
   "keywords": [
     "discord",
     "bot",
-    "typescript"
+    "typescript",
+    "netherhost",
+    "nethercore"
   ],
-  "author": "",
-  "license": "ISC",
+  "author": "netherhost/maybeizen",
+  "license": "MIT",
   "packageManager": "pnpm@10.11.0",
   "devDependencies": {
     "@types/node": "^22.15.29",
