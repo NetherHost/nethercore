@@ -33,6 +33,35 @@ export interface Ticket {
   responseTime?: number;
 }
 
+// export interface AdApplication {
+//   userId: string;
+//   adId: string;
+//   status: "pending" | "approved" | "rejected";
+
+//   company?: string;
+//   contactEmail?: string;
+//   advertiserURL: string;
+
+//   metadata: {
+//     adName: string;
+//     adDescription: string;
+//     adLink: string;
+//     adType: "image" | "video" | "gif";
+//   };
+
+//   reviewer?: {
+//     reviewerId: string;
+//     notes?: string;
+//   };
+
+//   timestamps: {
+//     createdAt: number;
+//     updatedAt: number;
+//     approvedAt?: number;
+//     rejectedAt?: number;
+//   };
+// }
+
 export interface User {
   userId: string;
   isStaff: boolean;

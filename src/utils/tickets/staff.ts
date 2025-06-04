@@ -150,7 +150,6 @@ class TicketStaff {
             flags: [MessageFlags.Ephemeral],
           });
         }
-
         ticket.claim = {
           status: true,
           claimedBy: interaction.user.id,
