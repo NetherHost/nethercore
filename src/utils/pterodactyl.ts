@@ -43,8 +43,6 @@ export async function fetchPterodactylStats(): Promise<PterodactylStats> {
       axios.get(`${API_URL}/api/application/servers`, { headers, httpsAgent }),
     ]);
 
-    console.log(serverResponse.data);
-
     const userCount = userResponse.data.meta.pagination.total;
     const serverCount = serverResponse.data.meta.pagination.total;
 
