@@ -4,6 +4,7 @@ import type { Client } from "discord.js";
 import { ActivityType } from "discord.js";
 import type { CommandKit } from "commandkit";
 import cache from "../../utils/cache";
+import { initPterodactylStatsFetching } from "../../utils/pterodactyl";
 
 export default function (
   c: Client<true>,
@@ -13,7 +14,42 @@ export default function (
   console.log(`${client.user.username} is online!`);
   cache.set("ready", true);
 
-  client.user.setActivity("nether.host", { type: ActivityType.Watching });
+  initPterodactylStatsFetching();
+
+  const getStatusMessages = () => {
+    const serverCount = cache.get("server_count") ?? 0;
+    const userCount = cache.get("user_count") ?? 0;
+
+    return [
+      {
+        text: `🖥️ ${serverCount} Servers Online`,
+        type: ActivityType.Custom,
+      },
+      {
+        text: `👥 Serving ${userCount} Users`,
+        type: ActivityType.Custom,
+      },
+      {
+        text: `🌐 nether.host`,
+        type: ActivityType.Custom,
+      },
+    ];
+  };
+
+  let index = 0;
+
+  const updateStatus = () => {
+    const statuses = getStatusMessages();
+    const { text, type } = statuses[index % statuses.length];
+
+    client.user.setActivity(text, { type });
+
+    index++;
+  };
+
+  updateStatus();
+
+  setInterval(updateStatus, 10_000);
 
   setInterval(() => {
     cache.cleanUp();

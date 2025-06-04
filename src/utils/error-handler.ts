@@ -17,6 +17,10 @@ class ErrorHandler {
       .setDescription(`${error.message}\n\n\`\`\`${error.stack}\`\`\``)
       .setColor("Red")
       .setTimestamp();
+
+    await this.webhookClient.send({
+      embeds: [embed],
+    });
   }
 
   public async execute(error: Error) {
