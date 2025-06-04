@@ -127,7 +127,7 @@ class OpenTicket {
         user: {
           id: 0,
           username: "development",
-          email: "development@nether.host",
+          email: "development@netherhost.cc",
         },
       };
 

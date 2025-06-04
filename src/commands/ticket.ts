@@ -92,7 +92,7 @@ export async function run({ interaction, client }: SlashCommandProps) {
       .setDescription(message!)
       .setColor("Red")
       .setFooter({
-        text: "Nether Host | nether.host",
+        text: "Nether Host | netherhost.cc",
         iconURL: client.user.avatarURL({ extension: "webp" }) ?? undefined,
       });
 

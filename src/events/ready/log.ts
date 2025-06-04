@@ -30,7 +30,7 @@ export default function (
         type: ActivityType.Custom,
       },
       {
-        text: `🌐 nether.host`,
+        text: `🌐 netherhost.cc`,
         type: ActivityType.Custom,
       },
     ];
