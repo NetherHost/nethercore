@@ -6,7 +6,7 @@ import type { CommandKit } from "commandkit";
 import cache from "../../utils/cache";
 import { initPterodactylStatsFetching } from "../../utils/pterodactyl";
 
-export default function (
+export default async function (
   c: Client<true>,
   client: Client<true>,
   handler: CommandKit
@@ -14,7 +14,7 @@ export default function (
   console.log(`${client.user.username} is online!`);
   cache.set("ready", true);
 
-  initPterodactylStatsFetching();
+  await initPterodactylStatsFetching();
 
   const getStatusMessages = () => {
     const serverCount = cache.get("server_count") ?? 0;
@@ -38,7 +38,7 @@ export default function (
 
   let index = 0;
 
-  const updateStatus = () => {
+  const updateStatus = async () => {
     const statuses = getStatusMessages();
     const { text, type } = statuses[index % statuses.length];
 
@@ -47,7 +47,7 @@ export default function (
     index++;
   };
 
-  updateStatus();
+  await updateStatus();
 
   setInterval(updateStatus, 10_000);
 

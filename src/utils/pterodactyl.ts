@@ -24,8 +24,12 @@ export async function fetchPterodactylStats(): Promise<PterodactylStats> {
 
     if (!API_KEY) {
       console.error("PTERODACTYL_API_KEY not found in environment variables");
-      errorHandler.execute(new FatalError("PTERODACTYL_API_KEY not found"));
-      process.exit(1);
+      errorHandler.execute(
+        new Error("PTERODACTYL_API_KEY not found in environment variables")
+      );
+      throw new FatalError(
+        "PTERODACTYL_API_KEY not found in environment variables"
+      );
     }
 
     const httpsAgent = new https.Agent({
@@ -60,9 +64,9 @@ export async function fetchPterodactylStats(): Promise<PterodactylStats> {
   }
 }
 
-export function initPterodactylStatsFetching(): void {
-  const updateStats = () => {
-    fetchPterodactylStats()
+export async function initPterodactylStatsFetching(): Promise<void> {
+  const updateStats = async () => {
+    await fetchPterodactylStats()
       .then((stats) => {
         cache.set("user_count", stats.userCount);
         cache.set("server_count", stats.serverCount);
@@ -75,6 +79,6 @@ export function initPterodactylStatsFetching(): void {
       });
   };
 
-  updateStats();
+  await updateStats();
   setInterval(updateStats, 300_000); //5m
 }
