@@ -100,6 +100,8 @@ export async function bulkRegisterUsers(client: Client, guildId: string) {
     }
 
     console.log(`Successfully registered ${newUsers.length} users!`);
+
+    return newUsers;
   } catch (error: any) {
     console.error("Error during bulk registration:", error);
     console.error(error.stack);

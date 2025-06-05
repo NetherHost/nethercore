@@ -1,5 +1,9 @@
 import type { CommandData, SlashCommandProps } from "commandkit";
-import { ApplicationCommandOptionType, PermissionsBitField } from "discord.js";
+import {
+  ApplicationCommandOptionType,
+  EmbedBuilder,
+  PermissionsBitField,
+} from "discord.js";
 import { bulkRegisterUsers } from "../utils/register";
 
 export const data: CommandData = {
@@ -17,8 +21,24 @@ export async function run({ interaction, client }: SlashCommandProps) {
   await interaction.editReply({
     content: "Started user bulk registration...",
   });
-  await bulkRegisterUsers(client, interaction.guild.id);
-  await interaction.editReply({
-    content: "Bulk user registration completed!",
-  });
+  const newUsers = await bulkRegisterUsers(client, interaction.guild.id);
+  if (newUsers && newUsers.length > 0) {
+    await interaction.editReply({
+      embeds: [
+        new EmbedBuilder()
+          .setTitle("Bulk Registration")
+          .setDescription(`Successfully registered ${newUsers.length} users!`)
+          .setColor("Green"),
+      ],
+    });
+  } else {
+    await interaction.editReply({
+      embeds: [
+        new EmbedBuilder()
+          .setTitle("Bulk Registration")
+          .setDescription("No new users to register.")
+          .setColor("Red"),
+      ],
+    });
+  }
 }
