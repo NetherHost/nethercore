@@ -16,10 +16,15 @@ export const data: CommandData = {
 export async function run({ interaction, client }: SlashCommandProps) {
   if (!interaction.guild?.id) return;
 
-  await interaction.deferReply({ ephemeral: true });
+  await interaction.deferReply();
 
   await interaction.editReply({
-    content: "Started user bulk registration...",
+    embeds: [
+      new EmbedBuilder()
+        .setTitle("Bulk Registration")
+        .setDescription("Started user bulk registration...")
+        .setColor("Yellow"),
+    ],
   });
   const newUsers = await bulkRegisterUsers(client, interaction.guild.id);
   if (newUsers && newUsers.length > 0) {
