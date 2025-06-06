@@ -12,48 +12,88 @@ interface PterodactylStats {
   serverCount: number;
 }
 
+interface PterodactylInstance {
+  url: string;
+  apiKey: string | undefined;
+}
+
 export async function fetchPterodactylStats(): Promise<PterodactylStats> {
   try {
     const cacheKey = "pterodactyl_stats";
     const cachedData = cache.get(cacheKey);
     if (cachedData) return cachedData as PterodactylStats;
 
-    const API_KEY = process.env.PTERODACTYL_API_KEY;
-    const API_URL =
-      process.env.PTERODACTYL_API_URL || "https://netherpanel.com";
+    const instances: PterodactylInstance[] = [
+      {
+        url: process.env.PTERODACTYL_API_URL || "https://netherpanel.com",
+        apiKey: process.env.PTERODACTYL_API_KEY,
+      },
+      {
+        url: "https://free.netherpanel.com",
+        apiKey: process.env.FREE_PTERODACTYL_API_KEY,
+      },
+    ];
 
-    if (!API_KEY) {
-      console.error("PTERODACTYL_API_KEY not found in environment variables");
-      errorHandler.execute(
-        new Error("PTERODACTYL_API_KEY not found in environment variables")
-      );
-      throw new FatalError(
-        "PTERODACTYL_API_KEY not found in environment variables"
-      );
+    for (const instance of instances) {
+      if (!instance.apiKey) {
+        console.error(`API key not found for ${instance.url}`);
+        errorHandler.execute(
+          new Error(`API key not found for ${instance.url}`)
+        );
+        throw new FatalError(`API key not found for ${instance.url}`);
+      }
     }
 
     const httpsAgent = new https.Agent({
       rejectUnauthorized: false,
     });
 
-    const headers = {
-      Authorization: `Bearer ${API_KEY}`,
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    };
+    const instanceResults = await Promise.all(
+      instances.map(async (instance) => {
+        try {
+          const headers = {
+            Authorization: `Bearer ${instance.apiKey}`,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          };
 
-    const [userResponse, serverResponse] = await Promise.all([
-      axios.get(`${API_URL}/api/application/users`, { headers, httpsAgent }),
-      axios.get(`${API_URL}/api/application/servers`, { headers, httpsAgent }),
-    ]);
+          const [userResponse, serverResponse] = await Promise.all([
+            axios.get(`${instance.url}/api/application/users`, {
+              headers,
+              httpsAgent,
+            }),
+            axios.get(`${instance.url}/api/application/servers`, {
+              headers,
+              httpsAgent,
+            }),
+          ]);
 
-    const userCount = userResponse.data.meta.pagination.total;
-    const serverCount = serverResponse.data.meta.pagination.total;
+          return {
+            userCount: userResponse.data.meta.pagination.total,
+            serverCount: serverResponse.data.meta.pagination.total,
+          };
+        } catch (error: any) {
+          console.error(
+            `[PTERODACTYL] Error fetching stats from ${instance.url}:`,
+            error.message
+          );
+          errorHandler.execute(error);
+          return { userCount: 0, serverCount: 0 };
+        }
+      })
+    );
 
-    const stats: PterodactylStats = { userCount, serverCount };
-    cache.set(cacheKey, stats, 300_000); // 5m
+    const combinedStats: PterodactylStats = instanceResults.reduce(
+      (acc, curr) => ({
+        userCount: acc.userCount + curr.userCount,
+        serverCount: acc.serverCount + curr.serverCount,
+      }),
+      { userCount: 0, serverCount: 0 }
+    );
 
-    return stats;
+    cache.set(cacheKey, combinedStats, 300_000); // 5m
+
+    return combinedStats;
   } catch (error: any) {
     console.error(
       "[PTERODACTYL] Error fetching Pterodactyl stats:",
