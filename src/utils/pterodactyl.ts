@@ -68,6 +68,10 @@ export async function fetchPterodactylStats(): Promise<PterodactylStats> {
             }),
           ]);
 
+          console.log(
+            `[PTERODACTYL] ${instance.url} - ${userResponse.data.meta.pagination.total} users, ${serverResponse.data.meta.pagination.total} servers`
+          );
+
           return {
             userCount: userResponse.data.meta.pagination.total,
             serverCount: serverResponse.data.meta.pagination.total,
