@@ -16,7 +16,7 @@ const ticketSchema = new Schema<TicketDocument>({
 
   department: {
     type: String,
-    enum: ["general", "billing", "technical", "other"],
+    enum: ["general", "billing", "technical", "advertising", "other"],
     required: true,
   },
 
