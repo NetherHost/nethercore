@@ -157,6 +157,7 @@ class OpenTicket {
         { label: "General", value: "general" },
         { label: "Technical", value: "technical" },
         { label: "Billing", value: "billing" },
+        { label: "Advertising", value: "advertising" },
         { label: "Other", value: "other" },
       ];
 

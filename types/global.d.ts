@@ -16,7 +16,7 @@ export interface Ticket {
   ticketId: string;
   name: string;
   status: "open" | "closed" | "deleted";
-  department: "general" | "billing" | "technical" | "other";
+  department: "general" | "billing" | "technical" | "advertising" | "other";
   claim: {
     status: boolean;
     claimedBy?: string;
