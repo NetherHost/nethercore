@@ -44,7 +44,7 @@ export async function checkUserLinked(
 
     try {
       const response = await axios.get(
-        `https://nether.host/api/discord/linked?discord_id=${discordId}`,
+        `https://netherhost.cc/api/discord/linked?discord_id=${discordId}`,
         {
           headers: {
             "X-Api-Key": `${API_KEY}`,
@@ -60,7 +60,7 @@ export async function checkUserLinked(
       errorHandler.execute(error);
 
       const httpResponse = await axios.get(
-        `http://nether.host/api/discord/linked?discord_id=${discordId}`,
+        `http://netherhost.cc/api/discord/linked?discord_id=${discordId}`,
         {
           headers: {
             "X-Api-Key": `${API_KEY}`,
