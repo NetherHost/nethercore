@@ -206,6 +206,9 @@ async function handleCreateGiveaway(
         : undefined,
       embeds: [giveawayEmbed],
       components: [buttonRow],
+      allowedMentions: {
+        parse: ["roles"],
+      },
     });
 
     const newGiveaway = await giveawayManager
