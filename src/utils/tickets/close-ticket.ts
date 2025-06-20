@@ -53,17 +53,9 @@ class CloseTicket {
         });
       }
 
-      const ticketCacheKey = `ticket_${channel.id}`;
-      let ticketData = cache.get(ticketCacheKey);
-
-      if (!ticketData) {
-        ticketData = await Tickets.findOne({
-          ticketId: channel.id,
-        });
-        if (ticketData) {
-          cache.set(ticketCacheKey, ticketData, 300000);
-        }
-      }
+      let ticketData = await Tickets.findOne({
+        ticketId: channel.id,
+      });
 
       if (!ticketData) {
         errorHandler.execute(
@@ -83,6 +75,7 @@ class CloseTicket {
       }
 
       if (channel) {
+        console.log(ticketData.userId);
         try {
           await channel.permissionOverwrites.edit(ticketData.userId, {
             SendMessages: false,
@@ -140,7 +133,6 @@ class CloseTicket {
       ticketData.status = "closed";
       ticketData.timestamps.closedAt = Date.now();
       await ticketData.save();
-      cache.delete(ticketCacheKey);
 
       const row = new ActionRowBuilder().addComponents(
         new ButtonBuilder()
