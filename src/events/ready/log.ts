@@ -42,8 +42,14 @@ export default async function (
     const statuses = getStatusMessages();
     const { text, type } = statuses[index % statuses.length];
 
-    client.user.setActivity("💥 Under Maintenance", {
-      type: ActivityType.Custom,
+    client.user.setPresence({
+      status: "idle",
+      activities: [
+        {
+          name: "💥 Under Maintenance",
+          type: ActivityType.Custom,
+        },
+      ],
     });
 
     index++;
