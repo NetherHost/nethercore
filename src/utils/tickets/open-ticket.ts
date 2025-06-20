@@ -400,6 +400,7 @@ class OpenTicket {
         });
       }
 
+      console.log(ticketData.userId);
       await channel.permissionOverwrites.edit(ticketData.userId, {
         SendMessages: true,
         AddReactions: true,
