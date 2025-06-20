@@ -42,7 +42,10 @@ export default async function (
     const statuses = getStatusMessages();
     const { text, type } = statuses[index % statuses.length];
 
-    client.user.setActivity(text, { type });
+    client.user.setActivity("💥 Under Maintenance", {
+      type: ActivityType.Custom,
+      state: "idle",
+    });
 
     index++;
   };
