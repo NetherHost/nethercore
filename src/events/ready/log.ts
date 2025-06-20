@@ -44,7 +44,6 @@ export default async function (
 
     client.user.setActivity("💥 Under Maintenance", {
       type: ActivityType.Custom,
-      state: "idle",
     });
 
     index++;
