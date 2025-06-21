@@ -81,7 +81,7 @@ class OpenTicket {
           break;
 
         case "CLIENTS_ONLY":
-          if (!member?.roles.cache.has("1288653045453819934")) {
+          if (!member?.roles.cache.has("1066019276634460181")) {
             return interaction.reply({
               content: `403 Forbidden: \`Only users with the "Client" role can open tickets at this time.\``,
               flags: [MessageFlags.Ephemeral],
