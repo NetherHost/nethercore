@@ -43,11 +43,11 @@ export default async function (
     const { text, type } = statuses[index % statuses.length];
 
     client.user.setPresence({
-      status: "idle",
+      status: "online",
       activities: [
         {
-          name: "💥 Under Maintenance",
-          type: ActivityType.Custom,
+          name: text,
+          type,
         },
       ],
     });
