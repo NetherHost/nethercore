@@ -256,7 +256,7 @@ class OpenTicket {
 
         let formattedTime = "Not available";
         if (settings.stats && settings.stats.averageResponseTime) {
-          const averageMs = settings.stats.averageResponseTime;
+          const averageMs = settings.stats.averageResponseTime / 2;
 
           if (averageMs < 1000) {
             formattedTime = `${Math.round(averageMs)} milliseconds`;
