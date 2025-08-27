@@ -24,5 +24,5 @@ export default async function (
     } catch (error) {
       console.error("Error in giveaway check interval:", error);
     }
-  }, 30 * 1000); // Check every 30 seconds
+  }, 30 * 1000); //30 seconds
 }

@@ -13,7 +13,7 @@ export interface TicketSettingsProps {
   };
   stats: {
     totalResolved: number;
-    averageResponseTime: number; // in milliseconds
+    averageResponseTime: number; // ms
     responseTimeLastUpdated?: Date;
     totalTicketsWithResponse: number;
   };
@@ -45,7 +45,7 @@ const ticketSettingsSchema = new Schema<TicketSettingsDocument>({
   },
   stats: {
     totalResolved: { type: Number, default: 0 },
-    averageResponseTime: { type: Number, default: 0 }, // in milliseconds
+    averageResponseTime: { type: Number, default: 0 }, // ms
     responseTimeLastUpdated: { type: Date },
     totalTicketsWithResponse: { type: Number, default: 0 },
   },

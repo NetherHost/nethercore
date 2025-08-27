@@ -138,7 +138,7 @@ class TicketTranscripts {
       const row = new ActionRowBuilder().addComponents(
         new ButtonBuilder()
           .setLabel("Trustpilot")
-          .setURL("https://trustpilot.com/evaluate/nether.host")
+          .setURL("https://www.trustpilot.com/evaluate/netherhost.cc")
           .setStyle(ButtonStyle.Link)
       );
 

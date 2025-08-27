@@ -23,7 +23,7 @@ const giveawaySettingsSchema = new Schema<GiveawaySettingsDocument>({
     enum: ["ENABLED", "DISABLED"],
     default: "ENABLED",
   },
-  defaultDuration: { type: Number, default: 86400 }, // 24 hours in seconds
+  defaultDuration: { type: Number, default: 86400 }, //24 hours
   defaultWinnerCount: { type: Number, default: 1 },
   autoReroll: { type: Boolean, default: false },
   requiredRoleId: { type: String },
