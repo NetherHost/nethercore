@@ -58,7 +58,10 @@ export async function bulkRegisterUsers(client: any, guildId: string) {
       const members = await guild.members.list(options);
       if (members.size === 0) break;
 
-      allMembers = [...allMembers, ...Array.from(members.values())];
+      allMembers = [
+        ...allMembers,
+        ...(Array.from(members.values()) as GuildMember[]),
+      ];
       console.log(
         `[BULK REGISTER] Fetched ${allMembers.length} members so far...`
       );
