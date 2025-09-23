@@ -6,7 +6,7 @@ import {
   TextChannel,
   NewsChannel,
 } from "discord.js";
-import config from "../../config";
+import config from "../../../config";
 import TicketSettings from "../../models/TicketSettings";
 import Tickets from "../../models/Tickets";
 import User from "../../models/User";

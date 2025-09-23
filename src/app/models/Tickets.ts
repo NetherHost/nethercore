@@ -1,5 +1,5 @@
 import { Schema, model, Document, Model } from "mongoose";
-import { type Ticket as TicketProps } from "../../types/global";
+import { type Ticket as TicketProps } from "../../../types/global";
 
 interface TicketDocument extends TicketProps, Document {}
 

@@ -13,7 +13,7 @@ import {
 import Tickets from "../../models/Tickets";
 import Ticket from "./index";
 import TicketSettings from "../../models/TicketSettings";
-import config from "../../config";
+import config from "../../../config";
 import { errorHandler } from "../error-handler";
 import cache from "../cache";
 

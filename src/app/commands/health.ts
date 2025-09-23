@@ -7,19 +7,19 @@ import {
   ActionRowBuilder,
   MessageFlags,
 } from "discord.js";
-import type { CommandData, SlashCommandProps } from "commandkit";
+import type { CommandData, ChatInputCommand } from "commandkit";
 import os from "node:os";
-import { version } from "../../package.json";
+import { version } from "../../../package.json";
 import { execSync } from "child_process";
 import { errorHandler } from "../utils/error-handler";
 const commit = execSync("git rev-parse --short HEAD").toString().trim();
 
-export const data: CommandData = {
+export const command: CommandData = {
   name: "health",
   description: "Replies with bot status and information.",
 };
 
-export async function run({ interaction, client }: SlashCommandProps) {
+export const chatInput: ChatInputCommand = async ({ interaction, client }) => {
   await interaction.deferReply();
 
   const formatUptime = (ms: number) => {
@@ -53,7 +53,7 @@ export async function run({ interaction, client }: SlashCommandProps) {
         },
         {
           name: "Uptime",
-          value: `\`\`\`${formatUptime(client.uptime)}\`\`\``,
+          value: `\`\`\`${formatUptime(client.uptime ?? 0)}\`\`\``,
           inline: true,
         },
         {
@@ -74,7 +74,7 @@ export async function run({ interaction, client }: SlashCommandProps) {
       )
       .setFooter({
         text: `NetherCore ${version} (${commit})`,
-        iconURL: client.user.avatarURL({ extension: "webp" }) ?? undefined,
+        iconURL: client.user?.avatarURL({ extension: "webp" }) ?? undefined,
       });
   };
 
@@ -116,4 +116,4 @@ export async function run({ interaction, client }: SlashCommandProps) {
 
     await interaction.editReply({ components: [disabledRow.toJSON()] });
   });
-}
+};

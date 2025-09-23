@@ -22,8 +22,8 @@ import User from "../../models/User";
 import {
   type Ticket as TicketProps,
   type User as UserProps,
-} from "../../../types/global";
-import config from "../../config";
+} from "../../../../types/global";
+import config from "../../../config";
 import { checkUserLinked } from "../../utils/api";
 import { errorHandler } from "../error-handler";
 import cache from "../cache";

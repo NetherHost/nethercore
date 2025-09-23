@@ -1,16 +1,13 @@
-import type { CommandData, SlashCommandProps } from "commandkit";
+import type { CommandData, ChatInputCommand } from "commandkit";
 import {
   ApplicationCommandOptionType,
   PermissionsBitField,
-  TextChannel,
-  NewsChannel,
-  ThreadChannel,
-  DMChannel,
   MessageFlags,
+  Channel,
 } from "discord.js";
 import { errorHandler } from "../utils/error-handler";
 
-export const data: CommandData = {
+export const command: CommandData = {
   name: "say",
   description: "Say something as NetherCore.",
   default_member_permissions:
@@ -31,7 +28,7 @@ export const data: CommandData = {
   ],
 };
 
-export async function run({ interaction }: SlashCommandProps) {
+export const chatInput: ChatInputCommand = async ({ interaction }) => {
   const message = interaction.options.getString("message", true);
   const anonymous = interaction.options.getBoolean("anonymous") ?? true;
 
@@ -46,9 +43,7 @@ export async function run({ interaction }: SlashCommandProps) {
 
   try {
     if (anonymous) {
-      await (
-        channel as TextChannel | NewsChannel | ThreadChannel | DMChannel
-      ).send(message);
+      await (channel as any).send(message);
 
       return interaction.reply({
         content: "Message sent anonymously.",
@@ -69,4 +64,4 @@ export async function run({ interaction }: SlashCommandProps) {
       flags: [MessageFlags.Ephemeral],
     });
   }
-}
+};

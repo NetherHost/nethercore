@@ -1,4 +1,4 @@
-import type { CommandData, SlashCommandProps } from "commandkit";
+import type { CommandData, ChatInputCommand } from "commandkit";
 import {
   ApplicationCommandOptionType,
   PermissionsBitField,
@@ -10,7 +10,7 @@ import GiveawaySettings from "../models/GiveawaySettings";
 import { errorHandler } from "../utils/error-handler";
 import cache from "../utils/cache";
 
-export const data: CommandData = {
+export const command: CommandData = {
   name: "settings",
   description: "Manage the bot's settings",
   default_member_permissions:
@@ -122,7 +122,7 @@ export const data: CommandData = {
   ],
 };
 
-export async function run({ interaction }: SlashCommandProps) {
+export const chatInput: ChatInputCommand = async ({ interaction }) => {
   try {
     const subcommandGroup = interaction.options.getSubcommandGroup();
     const subcommand = interaction.options.getSubcommand();
@@ -140,7 +140,7 @@ export async function run({ interaction }: SlashCommandProps) {
       flags: [MessageFlags.Ephemeral],
     });
   }
-}
+};
 
 async function handleTicketSettings(interaction: any, subcommand: string) {
   const cacheKey = "ticket_settings";

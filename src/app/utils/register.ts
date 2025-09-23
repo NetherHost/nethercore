@@ -31,7 +31,7 @@ export async function registerUser(user: DiscordUser) {
   }
 }
 
-export async function bulkRegisterUsers(client: Client, guildId: string) {
+export async function bulkRegisterUsers(client: any, guildId: string) {
   try {
     console.log("[BULK REGISTER] Starting bulk user registration...");
     const guild = client.guilds.cache.get(guildId);

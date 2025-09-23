@@ -5,17 +5,15 @@ import {
   ButtonStyle,
   ChannelType,
   PermissionsBitField,
-  TextChannel,
-  NewsChannel,
   ApplicationCommandOptionType,
   MessageFlags,
 } from "discord.js";
-import type { CommandData, SlashCommandProps } from "commandkit";
+import type { CommandData, ChatInputCommand } from "commandkit";
 import { errorHandler } from "../utils/error-handler";
 import cache from "../utils/cache";
 import Tickets from "../models/Tickets";
 
-export const data: CommandData = {
+export const command: CommandData = {
   name: "ticket",
   description: "Manage the ticket system.",
   default_member_permissions:
@@ -71,12 +69,10 @@ export const data: CommandData = {
   ],
 };
 
-export async function run({ interaction, client }: SlashCommandProps) {
+export const chatInput: ChatInputCommand = async ({ interaction, client }) => {
   const subcommand = interaction.options.getSubcommand();
   if (subcommand === "setup") {
-    const channel = interaction.options.getChannel("channel") as
-      | TextChannel
-      | NewsChannel;
+    const channel = interaction.options.getChannel("channel") as any;
     const message = interaction.options.getString("content");
 
     if (!channel || !channel.isTextBased()) {
@@ -93,7 +89,7 @@ export async function run({ interaction, client }: SlashCommandProps) {
       .setColor("Red")
       .setFooter({
         text: "Nether Host | netherhost.cc",
-        iconURL: client.user.avatarURL({ extension: "webp" }) ?? undefined,
+        iconURL: client.user?.avatarURL({ extension: "webp" }) ?? undefined,
       });
 
     const button = new ButtonBuilder()
@@ -116,7 +112,7 @@ export async function run({ interaction, client }: SlashCommandProps) {
     try {
       const user = interaction.options.getUser("user");
       const member = interaction.guild?.members.cache.get(user?.id!);
-      const channel = interaction.channel as TextChannel;
+      const channel = interaction.channel as any;
 
       const channelId = channel.id;
       const cacheKey = `ticket_channel_${channelId}`;
@@ -171,4 +167,4 @@ export async function run({ interaction, client }: SlashCommandProps) {
       });
     }
   }
-}
+};

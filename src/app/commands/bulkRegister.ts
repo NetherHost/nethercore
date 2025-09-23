@@ -1,4 +1,4 @@
-import type { CommandData, SlashCommandProps } from "commandkit";
+import type { CommandData, ChatInputCommand } from "commandkit";
 import {
   ApplicationCommandOptionType,
   EmbedBuilder,
@@ -6,14 +6,14 @@ import {
 } from "discord.js";
 import { bulkRegisterUsers } from "../utils/register";
 
-export const data: CommandData = {
+export const command: CommandData = {
   name: "bulk-register",
   description: "Run the bulk user registration utility",
   default_member_permissions:
     PermissionsBitField.Flags.Administrator.toString(),
 };
 
-export async function run({ interaction, client }: SlashCommandProps) {
+export const chatInput: ChatInputCommand = async ({ interaction, client }) => {
   if (!interaction.guild?.id) return;
 
   await interaction.deferReply();
@@ -46,4 +46,4 @@ export async function run({ interaction, client }: SlashCommandProps) {
       ],
     });
   }
-}
+};

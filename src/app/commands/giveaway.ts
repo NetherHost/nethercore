@@ -6,11 +6,11 @@ import {
   ApplicationCommandOptionType,
   PermissionsBitField,
 } from "discord.js";
-import type { CommandData, SlashCommandProps } from "commandkit";
+import type { CommandData, ChatInputCommand } from "commandkit";
 import Giveaway from "../utils/giveaway";
 import { errorHandler } from "../utils/error-handler";
 
-export const data: CommandData = {
+export const command: CommandData = {
   name: "giveaway",
   description: "Manage giveaways in the server.",
   default_member_permissions: PermissionsBitField.Flags.ManageEvents.toString(),
@@ -128,7 +128,7 @@ export const data: CommandData = {
   ],
 };
 
-export async function run({ interaction, client }: SlashCommandProps) {
+export const chatInput: ChatInputCommand = async ({ interaction, client }) => {
   const subcommand = interaction.options.getSubcommand();
   const giveawayManager = new Giveaway();
 
@@ -141,7 +141,7 @@ export async function run({ interaction, client }: SlashCommandProps) {
   } else if (subcommand === "list") {
     await handleListGiveaways(interaction, giveawayManager);
   }
-}
+};
 
 async function handleCreateGiveaway(
   interaction: any,

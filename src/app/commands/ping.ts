@@ -1,11 +1,11 @@
-import type { CommandData, SlashCommandProps } from "commandkit";
+import type { CommandData, ChatInputCommand } from "commandkit";
 import { ApplicationCommandOptionType, PermissionsBitField } from "discord.js";
 
-export const data: CommandData = {
+export const command: CommandData = {
   name: "ping",
   description: "Replies with pong",
 };
 
-export function run({ interaction }: SlashCommandProps) {
+export const chatInput: ChatInputCommand = async ({ interaction }) => {
   interaction.reply({ content: "Pong!" });
-}
+};

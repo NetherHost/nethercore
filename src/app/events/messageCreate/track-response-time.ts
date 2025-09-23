@@ -2,7 +2,7 @@ import { Client, Message } from "discord.js";
 import { CommandKit } from "commandkit";
 import Tickets from "../../models/Tickets";
 import TicketSettings from "../../models/TicketSettings";
-import config from "../../config";
+import config from "../../../config";
 import cache from "../../utils/cache";
 
 export default async function (

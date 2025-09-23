@@ -1,6 +1,6 @@
 import type { User, GuildMember, Client } from "discord.js";
 import type { CommandKit } from "commandkit";
-import config from "../../config";
+import config from "../../../config";
 
 export default async function (
   member: GuildMember,

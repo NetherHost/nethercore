@@ -1,5 +1,5 @@
 import { Schema, model, Document, Model } from "mongoose";
-import { type User as UserProps } from "../../types/global";
+import { type User as UserProps } from "../../../types/global";
 
 export interface UserDocument extends UserProps, Document {}
 
