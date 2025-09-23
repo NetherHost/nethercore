@@ -46,20 +46,20 @@ jobs:
       - name: Build project
         run: pnpm run build
 
-       - name: Deploy to server
-         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-         run: |
-           curl -X POST http://209.222.97.95:4192/deploy \
-             -H "Content-Type: application/json" \
-             -H "x-api-key: ${{ secrets.DEPLOYMENT_API_KEY }}" \
-             -H "X-GitHub-Event: ${{ github.event_name }}" \
-             -H "X-GitHub-Ref: ${{ github.ref }}" \
-             -H "X-GitHub-SHA: ${{ github.sha }}" \
-             -d '{
-               "repository": "${{ github.repository }}",
-               "branch": "${{ github.ref_name }}",
-               "commit": "${{ github.sha }}",
-               "event": "${{ github.event_name }}",
-               "timestamp": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'"
-             }'
-         continue-on-error: true
+      - name: Deploy to server
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        run: |
+          curl -X POST http://209.222.97.95:4192/deploy \
+            -H "Content-Type: application/json" \
+            -H "x-api-key: ${{ secrets.DEPLOYMENT_API_KEY }}" \
+            -H "X-GitHub-Event: ${{ github.event_name }}" \
+            -H "X-GitHub-Ref: ${{ github.ref }}" \
+            -H "X-GitHub-SHA: ${{ github.sha }}" \
+            -d '{
+              "repository": "${{ github.repository }}",
+              "branch": "${{ github.ref_name }}",
+              "commit": "${{ github.sha }}",
+              "event": "${{ github.event_name }}",
+              "timestamp": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'"
+            }'
+        continue-on-error: true
