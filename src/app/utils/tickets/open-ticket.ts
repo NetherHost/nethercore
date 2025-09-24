@@ -15,6 +15,7 @@ import {
   StringSelectMenuOptionBuilder,
   TextChannel,
   NewsChannel,
+  OverwriteType,
 } from "discord.js";
 import Tickets from "../../models/Tickets";
 import TicketSettings from "../../models/TicketSettings";
@@ -401,10 +402,15 @@ class OpenTicket {
       }
 
       console.log(ticketData.userId);
-      await channel.permissionOverwrites.edit(ticketData.userId, {
-        SendMessages: true,
-        AddReactions: true,
-      });
+
+      await channel.permissionOverwrites.edit(
+        ticketData.userId,
+        {
+          SendMessages: true,
+          AddReactions: true,
+        },
+        { type: OverwriteType.Member }
+      );
 
       ticketData.status = "open";
       ticketData.timestamps.reopenedAt = Date.now();
