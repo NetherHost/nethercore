@@ -7,7 +7,9 @@ import {
   EmbedBuilder,
   MessageFlags,
   NewsChannel,
+  OverwriteType,
   TextChannel,
+  User as DiscordUser,
 } from "discord.js";
 import config from "../../../config";
 import TicketSettings from "../../models/TicketSettings";
@@ -77,10 +79,14 @@ class CloseTicket {
       if (channel) {
         console.log(ticketData.userId);
         try {
-          await channel.permissionOverwrites.edit(ticketData.userId, {
-            SendMessages: false,
-            AddReactions: false,
-          });
+          await channel.permissionOverwrites.edit(
+            ticketData.userId,
+            {
+              SendMessages: false,
+              AddReactions: false,
+            },
+            { type: OverwriteType.Member }
+          );
         } catch (error: any) {
           console.error(error);
           errorHandler.execute(error);
@@ -158,7 +164,9 @@ class CloseTicket {
           new EmbedBuilder()
             .setTitle(`Ticket Closed`)
             .setDescription(
-              "This ticket has been closed. Below, there are some actions that the creator or a staff member can perform."
+              `This ticket has been closed by ${
+                interaction.user as DiscordUser
+              }. Below, there are some actions that the creator or a staff member can perform.`
             )
             .setColor("Red")
             .setFields(
