@@ -275,6 +275,9 @@ class OpenTicket {
         }
 
         await ticketChannel.send({
+          allowedMentions: {
+            roles: [config.staff.staffRoleIds[1]],
+          },
           content: `<@&${config.staff.staffRoleIds[1]}>`,
           embeds: [
             new EmbedBuilder()
