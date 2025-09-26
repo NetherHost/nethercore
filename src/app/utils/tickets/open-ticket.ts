@@ -20,10 +20,7 @@ import {
 import Tickets from "../../models/Tickets";
 import TicketSettings from "../../models/TicketSettings";
 import User from "../../models/User";
-import {
-  type Ticket as TicketProps,
-  type User as UserProps,
-} from "../../../../types/global";
+import { type Ticket as TicketProps } from "../../../../types/global";
 import config from "../../../config";
 import { checkUserLinked } from "../../utils/api";
 import { errorHandler } from "../error-handler";
@@ -278,6 +275,7 @@ class OpenTicket {
         }
 
         await ticketChannel.send({
+          content: `<@${config.staff.staffRoleIds[1]}>`,
           embeds: [
             new EmbedBuilder()
               .setDescription(
