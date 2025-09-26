@@ -275,7 +275,7 @@ class OpenTicket {
         }
 
         await ticketChannel.send({
-          content: `<@${config.staff.staffRoleIds[1]}>`,
+          content: `<@&${config.staff.staffRoleIds[1]}>`,
           embeds: [
             new EmbedBuilder()
               .setDescription(
