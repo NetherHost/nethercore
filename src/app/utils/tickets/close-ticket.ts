@@ -77,16 +77,26 @@ class CloseTicket {
       }
 
       if (channel) {
-        console.log(ticketData.userId);
         try {
-          await channel.permissionOverwrites.edit(
-            ticketData.userId,
-            {
-              SendMessages: false,
-              AddReactions: false,
-            },
-            { type: OverwriteType.Member }
-          );
+          const guild = channel.guild;
+          const member = await guild.members
+            .fetch(ticketData.userId)
+            .catch(() => null);
+
+          if (member) {
+            await channel.permissionOverwrites.edit(
+              ticketData.userId,
+              {
+                SendMessages: false,
+                AddReactions: false,
+              },
+              { type: OverwriteType.Member }
+            );
+          } else {
+            console.log(
+              "Ticket author not found in guild. Skipping permission overwrite..."
+            );
+          }
         } catch (error: any) {
           console.error(error);
           errorHandler.execute(error);
