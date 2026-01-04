@@ -1,49 +1,51 @@
 import type { CommandData, ChatInputCommand } from "commandkit";
 import {
-  ApplicationCommandOptionType,
-  EmbedBuilder,
-  PermissionsBitField,
+    ApplicationCommandOptionType,
+    EmbedBuilder,
+    PermissionsBitField,
 } from "discord.js";
 import { bulkRegisterUsers } from "../utils/register";
 
 export const command: CommandData = {
-  name: "bulk-register",
-  description: "Run the bulk user registration utility",
-  default_member_permissions:
-    PermissionsBitField.Flags.Administrator.toString(),
+    name: "bulk-register",
+    description: "Run the bulk user registration utility",
+    default_member_permissions:
+        PermissionsBitField.Flags.Administrator.toString(),
 };
 
 export const chatInput: ChatInputCommand = async ({ interaction, client }) => {
-  if (!interaction.guild?.id) return;
+    if (!interaction.guild?.id) return;
 
-  await interaction.deferReply();
+    await interaction.deferReply();
 
-  await interaction.editReply({
-    embeds: [
-      new EmbedBuilder()
-        .setTitle("Bulk Registration")
-        .setDescription("Started user bulk registration...")
-        .setColor("Yellow"),
-    ],
-  });
-  const newUsers = await bulkRegisterUsers(client, interaction.guild.id);
-  if (newUsers && newUsers.length > 0) {
     await interaction.editReply({
-      embeds: [
-        new EmbedBuilder()
-          .setTitle("Bulk Registration")
-          .setDescription(`Successfully registered ${newUsers.length} users!`)
-          .setColor("Green"),
-      ],
+        embeds: [
+            new EmbedBuilder()
+                .setTitle("Bulk Registration")
+                .setDescription("Started user bulk registration...")
+                .setColor("Yellow"),
+        ],
     });
-  } else {
-    await interaction.editReply({
-      embeds: [
-        new EmbedBuilder()
-          .setTitle("Bulk Registration")
-          .setDescription("No new users to register.")
-          .setColor("Red"),
-      ],
-    });
-  }
+    const newUsers = await bulkRegisterUsers(client, interaction.guild.id);
+    if (newUsers && newUsers.length > 0) {
+        await interaction.editReply({
+            embeds: [
+                new EmbedBuilder()
+                    .setTitle("Bulk Registration")
+                    .setDescription(
+                        `Successfully registered ${newUsers.length} users!`
+                    )
+                    .setColor("Green"),
+            ],
+        });
+    } else {
+        await interaction.editReply({
+            embeds: [
+                new EmbedBuilder()
+                    .setTitle("Bulk Registration")
+                    .setDescription("No new users to register.")
+                    .setColor("Red"),
+            ],
+        });
+    }
 };

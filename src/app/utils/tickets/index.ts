@@ -5,31 +5,31 @@ import TicketTranscripts from "./transcript";
 import TicketStaff from "./staff";
 
 class Ticket {
-  constructor() {}
+    constructor() {}
 
-  public open() {
-    return new OpenTicket();
-  }
+    public open() {
+        return new OpenTicket();
+    }
 
-  public reopen() {
-    return new OpenTicket();
-  }
+    public reopen() {
+        return new OpenTicket();
+    }
 
-  public close() {
-    return new CloseTicket();
-  }
+    public close() {
+        return new CloseTicket();
+    }
 
-  public delete() {
-    return new DeleteTicket();
-  }
+    public delete() {
+        return new DeleteTicket();
+    }
 
-  public transcript() {
-    return new TicketTranscripts();
-  }
+    public transcript() {
+        return new TicketTranscripts();
+    }
 
-  public staff() {
-    return new TicketStaff();
-  }
+    public staff() {
+        return new TicketStaff();
+    }
 }
 
 export default Ticket;

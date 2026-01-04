@@ -1,21 +1,21 @@
 import type {
-  Client,
-  ButtonInteraction,
-  CacheType,
-  Interaction,
+    Client,
+    ButtonInteraction,
+    CacheType,
+    Interaction,
 } from "discord.js";
 import type { CommandKit } from "commandkit";
 import Ticket from "../../utils/tickets";
 
 export default async function (
-  interaction: Interaction<CacheType>,
-  client: Client<true>,
-  handler: CommandKit
+    interaction: Interaction<CacheType>,
+    client: Client<true>,
+    handler: CommandKit
 ) {
-  if (!interaction.isButton()) return;
-  if (interaction.customId !== "ticket-close-button") return;
+    if (!interaction.isButton()) return;
+    if (interaction.customId !== "ticket-close-button") return;
 
-  const ticket = new Ticket();
+    const ticket = new Ticket();
 
-  await ticket.close().close({ interaction, client });
+    await ticket.close().close({ interaction, client });
 }

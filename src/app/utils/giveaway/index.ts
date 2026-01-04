@@ -8,35 +8,35 @@ import Participate from "./participate";
 import CheckGiveaway from "./check-giveaway";
 
 class Giveaway {
-  constructor() {}
+    constructor() {}
 
-  public start() {
-    return new StartGiveaway();
-  }
+    public start() {
+        return new StartGiveaway();
+    }
 
-  public end() {
-    return new EndGiveaway();
-  }
+    public end() {
+        return new EndGiveaway();
+    }
 
-  public info() {
-    return new GetGiveawayInfo();
-  }
+    public info() {
+        return new GetGiveawayInfo();
+    }
 
-  public list() {
-    return new ListGiveaways();
-  }
+    public list() {
+        return new ListGiveaways();
+    }
 
-  public reroll() {
-    return new RerollGiveaway();
-  }
+    public reroll() {
+        return new RerollGiveaway();
+    }
 
-  public participate() {
-    return new Participate();
-  }
+    public participate() {
+        return new Participate();
+    }
 
-  public check() {
-    return new CheckGiveaway();
-  }
+    public check() {
+        return new CheckGiveaway();
+    }
 }
 
 export default Giveaway;
